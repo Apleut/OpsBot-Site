@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpsBot — Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --green-dim: #00c032;
+    --green-dark: #006618;
+    --bg: #020902;
+    --surface: #070f07;
+    --border: rgba(0,255,65,0.2);
+    --text: #b8f5c0;
+    --text-dim: #4d8f55;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    overflow: hidden;
+    cursor: crosshair;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  /* SCANLINES */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* GRID */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,65,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,65,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  /* RADIAL GLOW */
+  .bg-glow {
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(0,255,65,0.07) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 700px;
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* LOGO */
+  .logo {
+    font-family: var(--display);
+    font-size: clamp(3.5rem, 10vw, 6.5rem);
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    margin-bottom: 0.15em;
+    opacity: 0;
+    animation: fadein 0.4s 0.2s forwards;
+  }
+  .logo .bracket { color: var(--green-dim); text-shadow: 0 0 20px rgba(0,200,50,0.4); }
+  .logo .ops { color: var(--green); text-shadow: 0 0 30px rgba(0,255,65,0.5), 0 0 60px rgba(0,255,65,0.2); }
+  .logo .bot { color: #fff; }
+
+  /* STATUS CHIP */
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.9rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    color: var(--green-dim);
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadein 0.4s 0.5s forwards;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: blink 1.2s ease-in-out infinite;
+  }
+
+  /* TERMINAL BOX */
+  .terminal {
+    width: 100%;
+    background: #030d03;
+    border: 1px solid var(--border);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadein 0.4s 0.7s forwards;
+  }
+  .terminal-bar {
+    background: #080f08;
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .t-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .t-r { background: #2a0d0d; }
+  .t-y { background: #2a220d; }
+  .t-g { background: var(--green-dark); }
+  .terminal-title {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin: 0 auto;
+  }
+  .terminal-body {
+    padding: 1.2rem 1.4rem;
+    font-size: 0.78rem;
+    line-height: 2;
+    text-align: left;
+    min-height: 220px;
+  }
+  .line { display: flex; gap: 0.6rem; opacity: 0; }
+  .line.visible { opacity: 1; }
+  .prompt { color: var(--green-dim); flex-shrink: 0; }
+  .cmd { color: #fff; }
+  .out { color: var(--text-dim); padding-left: 1.2rem; }
+  .out.green { color: var(--green); }
+  .out.warn { color: #e07b30; }
+  .out.dim { color: var(--green-dark); }
+  .cursor-line { display: flex; gap: 0.6rem; }
+  .cursor {
+    display: inline-block;
+    width: 8px; height: 15px;
+    background: var(--green);
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+
+  /* COUNTDOWN */
+  .countdown-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    opacity: 0;
+    animation: fadein 0.4s 0.9s forwards;
+  }
+  .countdown {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+    opacity: 0;
+    animation: fadein 0.4s 1s forwards;
+  }
+  .cd-unit {
+    flex: 1;
+    padding: 1.2rem 0.5rem 1rem;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .cd-unit:last-child { border-right: none; }
+  .cd-num {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: 0 0 20px rgba(0,255,65,0.35);
+    line-height: 1;
+    display: block;
+  }
+  .cd-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+    display: block;
+  }
+
+  /* BOTTOM ROW */
+  .bottom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    opacity: 0;
+    animation: fadein 0.4s 1.1s forwards;
+  }
+  .domain {
+    font-size: 0.72rem;
+    color: var(--green-dark);
+    letter-spacing: 0.12em;
+  }
+  .tagline {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+  .notify-btn {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: #000;
+    background: var(--green);
+    border: none;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    transition: background 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+  }
+  .notify-btn:hover { background: #00ff70; box-shadow: 0 0 20px rgba(0,255,65,0.4); }
+
+  /* CORNER BRACKETS */
+  .corner { position: fixed; width: 40px; height: 40px; z-index: 10; }
+  .corner svg { width: 100%; height: 100%; }
+  .corner.tl { top: 20px; left: 20px; }
+  .corner.tr { top: 20px; right: 20px; transform: scaleX(-1); }
+  .corner.bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
+  .corner.br { bottom: 20px; right: 20px; transform: scale(-1); }
+
+  @keyframes fadein { to { opacity: 1; } }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  @media (max-width: 500px) {
+    .bottom-row { flex-direction: column; gap: 1rem; text-align: center; }
+    .tagline { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<!-- Corner brackets -->
+<div class="corner tl"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="40,2 2,2 2,40" stroke="#00ff41" stroke-width="2" stroke-opacity="0.6"/></svg></div>
+<div class="corner tr"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="40,2 2,2 2,40" stroke="#00ff41" stroke-width="2" stroke-opacity="0.6"/></svg></div>
+<div class="corner bl"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="40,2 2,2 2,40" stroke="#00ff41" stroke-width="2" stroke-opacity="0.6"/></svg></div>
+<div class="corner br"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="40,2 2,2 2,40" stroke="#00ff41" stroke-width="2" stroke-opacity="0.6"/></svg></div>
+
+<div class="container">
+
+  <div class="logo">
+    <span class="bracket">[</span><span class="ops">OPS</span><span class="bot">BOT</span><span class="bracket">]</span>
+  </div>
+
+  <div class="status-chip">
+    <span class="status-dot"></span>
+    System initializing
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot t-r"></div>
+      <div class="t-dot t-y"></div>
+      <div class="t-dot t-g"></div>
+      <span class="terminal-title">OPSBOT — BOOT SEQUENCE</span>
+    </div>
+    <div class="terminal-body" id="termBody">
+      <div class="cursor-line"><span class="prompt">$</span> <span class="cursor"></span></div>
+    </div>
+  </div>
+
+  <div class="countdown-label">// Estimated deployment</div>
+  <div class="countdown">
+    <div class="cd-unit"><span class="cd-num" id="cd-d">00</span><span class="cd-label">Days</span></div>
+    <div class="cd-unit"><span class="cd-num" id="cd-h">00</span><span class="cd-label">Hours</span></div>
+    <div class="cd-unit"><span class="cd-num" id="cd-m">00</span><span class="cd-label">Minutes</span></div>
+    <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><span class="cd-label">Seconds</span></div>
+  </div>
+
+  <div class="bottom-row">
+    <span class="domain">opsbot.link</span>
+    <span class="tagline">The Only Bot Your Division Will Ever Need</span>
+    <a href="mailto:support@opsbot.link" class="notify-btn">Contact U</a>
+  </div>
+
+</div>
+
+<script>
+  // Terminal boot sequence
+  const lines = [
+    { type: 'cmd',  text: 'opsbot --init' },
+    { type: 'out',  text: 'Loading core modules...' },
+    { type: 'out',  text: 'SEA blacklist sync........... OK', cls: 'green' },
+    { type: 'out',  text: 'Division EXP tracker......... OK', cls: 'green' },
+    { type: 'out',  text: 'Event host engine............ OK', cls: 'green' },
+    { type: 'out',  text: 'Roblox promotion bridge...... OK', cls: 'green' },
+    { type: 'out',  text: 'Analytics digest............. OK', cls: 'green' },
+    { type: 'out',  text: 'Module toggle system......... OK', cls: 'green' },
+    { type: 'out',  text: '' },
+    { type: 'out',  text: 'WARNING: Deployment pending', cls: 'warn' },
+    { type: 'out',  text: 'Standing by for launch...', cls: 'dim' },
+  ];
+
+  const body = document.getElementById('termBody');
+  let i = 0;
+
+  function addLine() {
+    if (i >= lines.length) return;
+    const l = lines[i++];
+    const div = document.createElement('div');
+    div.className = 'line visible';
+
+    if (l.type === 'cmd') {
+      div.innerHTML = `<span class="prompt">$</span><span class="cmd"> ${l.text}</span>`;
+    } else {
+      const cls = l.cls ? ` ${l.cls}` : '';
+      div.innerHTML = `<span class="out${cls}">${l.text}</span>`;
+    }
+
+    // Insert before cursor line
+    const cursor = body.querySelector('.cursor-line');
+    body.insertBefore(div, cursor);
+    setTimeout(addLine, i === 1 ? 300 : l.text === '' ? 80 : 120);
+  }
+
+  setTimeout(addLine, 900);
+
+  // Countdown — target date, edit as needed
+  const target = new Date('2026-06-01T12:00:00Z');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    const now = new Date();
+    const diff = Math.max(0, target - now);
+    const s = Math.floor(diff / 1000) % 60;
+    const m = Math.floor(diff / 60000) % 60;
+    const h = Math.floor(diff / 3600000) % 24;
+    const d = Math.floor(diff / 86400000);
+    document.getElementById('cd-d').textContent = pad(d);
+    document.getElementById('cd-h').textContent = pad(h);
+    document.getElementById('cd-m').textContent = pad(m);
+    document.getElementById('cd-s').textContent = pad(s);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
