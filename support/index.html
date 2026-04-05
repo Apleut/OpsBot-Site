@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpsBot — Support</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --green-dim: #00c032;
+    --green-dark: #006618;
+    --green-glow: rgba(0,255,65,0.18);
+    --black: #000000;
+    --bg: #030a03;
+    --surface: #070f07;
+    --surface2: #0b180b;
+    --border: rgba(0,255,65,0.22);
+    --text: #b8f5c0;
+    --text-dim: #4d8f55;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+    --body: 'Rajdhani', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,65,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,65,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 64px;
+    background: rgba(3,10,3,0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--green);
+    letter-spacing: 0.12em;
+    text-shadow: 0 0 14px var(--green);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-logo .bracket { color: var(--green-dim); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+    text-transform: uppercase;
+  }
+  .nav-links a:hover { color: var(--green); text-shadow: 0 0 8px var(--green); }
+  .nav-links a.active { color: var(--green); }
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--black);
+    background: var(--green);
+    padding: 0.45rem 1.1rem;
+    border: none; cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .nav-cta:hover { background: #00ff70; box-shadow: 0 0 20px rgba(0,255,65,0.5); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 140px 2rem 5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center top, rgba(0,255,65,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .page-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green-dim);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 0.35rem 1rem;
+    display: inline-block;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadein 0.6s 0.2s forwards;
+  }
+  .page-header h1 {
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.4em;
+    opacity: 0;
+    animation: fadein 0.6s 0.4s forwards;
+  }
+  .page-header h1 span { color: var(--green); text-shadow: 0 0 30px rgba(0,255,65,0.4); }
+  .page-header p {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.65;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadein 0.6s 0.6s forwards;
+  }
+
+  /* STATUS BAR */
+  .status-bar {
+    max-width: 900px;
+    margin: 0 auto 5rem;
+    padding: 0 2rem;
+    opacity: 0;
+    animation: fadein 0.6s 0.8s forwards;
+  }
+  .status-inner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1rem 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  .status-dot.yellow { background: #ffd700; box-shadow: 0 0 8px #ffd700; }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .status-label { color: var(--green); }
+  .status-divider {
+    width: 1px; height: 20px;
+    background: var(--border);
+  }
+
+  /* MAIN CONTENT */
+  .support-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .support-card {
+    background: var(--surface);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: background 0.3s;
+  }
+  .support-card.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .support-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .support-card:hover { background: var(--surface2); }
+  .support-card:hover::after { opacity: 1; }
+
+  .card-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--green-dark);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .card-icon {
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
+    display: block;
+    filter: drop-shadow(0 0 8px var(--green));
+  }
+  .support-card h3 {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .support-card p {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 1.8rem;
+  }
+
+  /* BUTTONS */
+  .card-btn {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--black);
+    background: var(--green);
+    padding: 0.65rem 1.5rem;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+  .card-btn:hover {
+    background: #00ff70;
+    box-shadow: 0 0 20px rgba(0,255,65,0.5);
+    transform: translateY(-2px);
+  }
+  .card-btn-outline {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--green);
+    background: transparent;
+    padding: 0.65rem 1.5rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: all 0.2s;
+  }
+  .card-btn-outline:hover {
+    border-color: var(--green);
+    background: var(--green-glow);
+    transform: translateY(-2px);
+  }
+
+  /* EMAIL DISPLAY */
+  .email-display {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--green);
+    background: rgba(0,255,65,0.05);
+    border: 1px solid var(--border);
+    padding: 0.8rem 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .email-display:hover {
+    background: rgba(0,255,65,0.1);
+    border-color: var(--green);
+  }
+  .email-display .copy-hint {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-left: auto;
+    letter-spacing: 0.08em;
+  }
+  .copied-msg {
+    position: absolute;
+    right: 1rem;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .copied-msg.show { opacity: 1; }
+
+  /* FAQ */
+  .faq-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green-dim);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .section-tag::before { content: '// '; }
+  .faq-section h2 {
+    font-family: var(--display);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.5rem;
+  }
+  .faq-section h2 span { color: var(--green); text-shadow: 0 0 20px rgba(0,255,65,0.4); }
+
+  .faq-list {
+    border: 1px solid var(--border);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q {
+    padding: 1.4rem 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    background: var(--surface);
+    transition: background 0.2s;
+    gap: 1rem;
+  }
+  .faq-q:hover { background: var(--surface2); }
+  .faq-q-text {
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .faq-arrow {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--green-dim);
+    flex-shrink: 0;
+    transition: transform 0.3s;
+  }
+  .faq-item.open .faq-arrow { transform: rotate(90deg); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.3s;
+    background: rgba(0,255,65,0.02);
+    padding: 0 1.8rem;
+  }
+  .faq-item.open .faq-a {
+    max-height: 300px;
+    padding: 1.2rem 1.8rem 1.5rem;
+  }
+  .faq-a p {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .faq-a code {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--green);
+    background: rgba(0,255,65,0.08);
+    padding: 0.1rem 0.4rem;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-logo {
+    font-family: var(--display);
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: var(--green-dim);
+    letter-spacing: 0.12em;
+  }
+  .footer-text {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--green); }
+
+  @keyframes fadein { to { opacity: 1; } }
+
+  @media (max-width: 640px) {
+    .support-grid { grid-template-columns: 1fr; }
+    nav .nav-links { display: none; }
+    .status-inner { flex-direction: column; align-items: flex-start; }
+    .status-divider { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="page-tag">Help & Support</div>
+  <h1>We've Got You<br><span>Covered.</span></h1>
+  <p>Having trouble? Choose the fastest path to a solution below. Most issues are resolved within 24 hours.</p>
+</div>
+
+<!-- SUPPORT CARDS -->
+<div class="support-grid">
+
+  <div class="support-card">
+    <span class="card-num">01 // PRIMARY</span>
+    <span class="card-icon">✉️</span>
+    <h3>Email Support</h3>
+    <p>For bug reports, detailed issues, or anything that needs a paper trail. Email is preferred — it keeps things organized and ensures nothing gets lost.</p>
+    <div class="email-display" onclick="copyEmail(this)">
+      <span>support@opsbot.link</span>
+      <span class="copy-hint">CLICK TO COPY</span>
+      <span class="copied-msg">COPIED!</span>
+    </div>
+    <a href="mailto:support@opsbot.link" class="card-btn">Open Email</a>
+  </div>
+
+  <div class="support-card">
+    <span class="card-num">02 // FASTEST</span>
+    <span class="card-icon">💬</span>
+    <h3>Support Server</h3>
+    <p>For quick questions, setup help, or real-time troubleshooting. Join the OPSBOT Discord server and open a ticket or post in the support channel.</p>
+    <br>
+    <a href="https://discord.gg/QuVUZzfXdf" target="_blank" class="card-btn">Join Discord</a>
+  </div>
+
+  <div class="support-card" style="grid-column: 1 / -1; border-top: 1px solid var(--border);">
+    <span class="card-num">03 // BEFORE YOU REACH OUT</span>
+    <span class="card-icon">⚡</span>
+    <h3>Quick Fixes</h3>
+    <p>Most issues are caused by one of these. Try them first before contacting support.</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 0.5rem;">
+      <div style="background: var(--bg); padding: 1.2rem 1.4rem;">
+        <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--green-dim); margin-bottom: 0.5rem; letter-spacing: 0.1em;">COMMANDS NOT SHOWING</div>
+        <div style="font-size: 0.88rem; color: var(--text-dim); line-height: 1.6;">Wait up to 1 hour after adding the bot for slash commands to appear. Discord syncs commands globally on a delay.</div>
+      </div>
+      <div style="background: var(--bg); padding: 1.2rem 1.4rem;">
+        <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--green-dim); margin-bottom: 0.5rem; letter-spacing: 0.1em;">SETUP NOT WORKING</div>
+        <div style="font-size: 0.88rem; color: var(--text-dim); line-height: 1.6;">Make sure you have Administrator permission. Run <code>/setup</code> and follow the wizard step by step.</div>
+      </div>
+      <div style="background: var(--bg); padding: 1.2rem 1.4rem;">
+        <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--green-dim); margin-bottom: 0.5rem; letter-spacing: 0.1em;">PROMOTIONS FAILING</div>
+        <div style="font-size: 0.88rem; color: var(--text-dim); line-height: 1.6;">The OPSBOT Roblox account must be in your group with a rank higher than anyone you want to promote.</div>
+      </div>
+      <div style="background: var(--bg); padding: 1.2rem 1.4rem;">
+        <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--green-dim); margin-bottom: 0.5rem; letter-spacing: 0.1em;">EXP NOT UPDATING</div>
+        <div style="font-size: 0.88rem; color: var(--text-dim); line-height: 1.6;">EXP syncs every 10 minutes. If it's been longer, confirm your division name matches the SEA tracker exactly.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FAQ -->
+<div class="faq-section" style="margin-top: 4rem;">
+  <div class="section-tag">common questions</div>
+  <h2>Frequently <span>Asked.</span></h2>
+  <div class="faq-list" id="faq">
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">How do I get OPSBOT into my division server?</span>
+        <span class="faq-arrow">▶</span>
+      </div>
+      <div class="faq-a">
+        <p>OPSBOT is currently in closed beta, so in order to add it you have to submit a request via email or Discord. Once you have it in your server, run <code>/setup</code> and the wizard will walk you through the rest.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Does my division need to be official in SEA to use OPSBOT?</span>
+        <span class="faq-arrow">▶</span>
+      </div>
+      <div class="faq-a">
+        <p>No. Unofficial divisions can use all OPSBOT features except EXP tracking, which requires your division to appear in the SEA Division Tracker. During setup, you'll be asked whether your division is official or not.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Why isn't the blacklist auto-ban working?</span>
+        <span class="faq-arrow">▶</span>
+      </div>
+      <div class="faq-a">
+        <p>Make sure the blacklist module is enabled via <code>/settings module toggle</code>. Also verify OPSBOT has the Ban Members permission in your server. The blacklist is scanned every 30 minutes, so newly added entries may take up to 30 minutes to enforce.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Can I disable modules I don't need?</span>
+        <span class="faq-arrow">▶</span>
+      </div>
+      <div class="faq-a">
+        <p>Yes. Run <code>/settings module toggle</code> to enable or disable any module. Available modules include Events, Ranking, Moderation, Blacklist Auto-Banning, Weekly Analytics, and Logging.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Who can use OPSBOT commands?</span>
+        <span class="faq-arrow">▶</span>
+      </div>
+      <div class="faq-a">
+        <p>Discord Administrators always have full access. Other members need to be assigned a role tier (High Command, Officer, or Trial Officer) via <code>/settings roles set</code>, with permissions configured per-tier.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">How long does support take to respond?</span>
+        <span class="faq-arrow">▶</span>
+      </div>
+      <div class="faq-a">
+        <p>Response times are usually within 24 hours for both email and Discord.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">[OPSBOT]</div>
+  <div class="footer-text">SEA-Integrated Division Automation System</div>
+</footer>
+
+<script>
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  function copyEmail(el) {
+    navigator.clipboard.writeText('support@opsbot.link').then(() => {
+      const msg = el.querySelector('.copied-msg');
+      const hint = el.querySelector('.copy-hint');
+      hint.style.opacity = '0';
+      msg.classList.add('show');
+      setTimeout(() => {
+        msg.classList.remove('show');
+        hint.style.opacity = '1';
+      }, 2000);
+    });
+  }
+
+  // scroll reveal for cards
+  const cards = document.querySelectorAll('.support-card');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('revealed'), i * 100);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  cards.forEach(c => obs.observe(c));
+</script>
+</body>
+</html>
