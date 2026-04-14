@@ -223,6 +223,137 @@
 </style>
 </head>
 <body>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --green-dim: #00c032;
+    --green-glow: rgba(0,255,65,0.18);
+    --black: #000000;
+    --nav-bg: rgba(3,10,3,0.92);
+    --border: rgba(0,255,65,0.22);
+    --text-dim: #4d8f55;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+  }
+
+  .ops-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 64px;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    /* Transition for the slide effect */
+    transition: top 0.3s ease-in-out;
+  }
+
+  /* Hidden state class */
+  .nav-hidden {
+    top: -70px; /* Moves it just out of view */
+  }
+
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--green);
+    letter-spacing: 0.12em;
+    text-shadow: 0 0 14px var(--green);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+    text-transform: uppercase;
+  }
+
+  .nav-link:hover {
+    color: var(--green);
+    text-shadow: 0 0 8px var(--green);
+  }
+
+  .nav-btn {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--black);
+    background: var(--green);
+    padding: 0.45rem 1.1rem;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+
+  .nav-btn:hover {
+    background: #00ff70;
+    box-shadow: 0 0 20px rgba(0,255,65,0.5);
+    transform: translateY(-1px);
+  }
+
+  /* Necessary padding so content isn't chopped off at the top */
+  body { padding-top: 64px; }
+
+  @media (max-width: 640px) {
+    .ops-nav { padding: 0 1.5rem; }
+    .nav-link { display: none; }
+  }
+</style>
+
+<nav class="ops-nav" id="navbar">
+  <a href="https://opsbot.link/" class="nav-logo">
+    <span style="color: var(--green-dim)">[</span>OPSBOT<span style="color: var(--green-dim)">]</span>
+  </a>
+  
+  <div class="nav-links">
+    <a href="https://opsbot.link/" class="nav-link">Home</a>
+    <a href="https://opsbot.link/support" class="nav-btn">Support</a>
+  </div>
+</nav>
+
+<script>
+  let lastScrollTop = 0;
+  const navbar = document.getElementById("navbar");
+
+  window.addEventListener("scroll", function() {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Check if scrolling down and if we've scrolled past the header height
+    if (scrollTop > lastScrollTop && scrollTop > 64) {
+      // Scroll Down - Hide Nav
+      navbar.classList.add("nav-hidden");
+    } else {
+      // Scroll Up - Show Nav
+      navbar.classList.remove("nav-hidden");
+    }
+    
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+  }, false);
+</script>
 
 <div class="bg-glow"></div>
 
