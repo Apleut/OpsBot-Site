@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — System Error</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --green-dim: #00c032;
+    --green-dark: #006618;
+    --green-glow: rgba(0,255,65,0.18);
+    --black: #000000;
+    --bg: #030a03;
+    --surface: #070f07;
+    --border: rgba(0,255,65,0.22);
+    --text: #b8f5c0;
+    --text-dim: #4d8f55;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+    --body: 'Rajdhani', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: crosshair;
+  }
+
+  /* Scanline & Grid Overlays */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(0,255,65,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,65,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .error-container {
+    text-align: center;
+    padding: 2rem;
+    z-index: 10;
+    max-width: 600px;
+  }
+
+  .error-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green-dim);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 0.35rem 1rem;
+    display: inline-block;
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(5rem, 15vw, 8rem);
+    font-weight: 900;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 0.2em;
+    text-shadow: 0 0 30px rgba(0,255,65,0.4);
+    position: relative;
+    animation: glitch 3s infinite;
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 3rem;
+  }
+
+  .home-btn {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--black);
+    background: var(--green);
+    padding: 0.8rem 2rem;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+
+  .home-btn:hover {
+    background: #00ff70;
+    box-shadow: 0 0 30px rgba(0,255,65,0.5);
+    transform: translateY(-3px);
+  }
+
+  /* Glitch effect for the 404 text */
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    1% { transform: translate(-2px, 2px); }
+    2% { transform: translate(2px, -2px); }
+    3% { transform: translate(0); }
+    100% { transform: translate(0); }
+  }
+
+  .status-code {
+    font-family: var(--mono);
+    color: var(--green-dark);
+    font-size: 0.8rem;
+    margin-top: 2rem;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="error-container">
+  <div class="error-tag">Status: 404 // Lost Link</div>
+  <h1>404</h1>
+  <h2>Resource Not Found</h2>
+  <p>The requested packet has been dropped or does not exist. Access to this directory is restricted or unavailable.</p>
+  
+  <a href="https://opsbot.link" class="home-btn">Return to Mainframe</a>
+</div>
+
+</body>
+</html>
