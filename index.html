@@ -11,9 +11,12 @@
     --green: #00ff41;
     --green-dim: #00c032;
     --green-dark: #006618;
+    --green-glow: rgba(0,255,65,0.18);
+    --black: #000000;
     --bg: #020902;
     --surface: #070f07;
-    --border: rgba(0,255,65,0.2);
+    --nav-bg: rgba(3,10,3,0.92);
+    --border: rgba(0,255,65,0.22);
     --text: #b8f5c0;
     --text-dim: #4d8f55;
     --mono: 'Share Tech Mono', monospace;
@@ -21,18 +24,13 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  
   html { scroll-behavior: smooth; }
 
   body { 
-    background: var(--bg); 
-    color: var(--text); 
-    font-family: var(--mono); 
-    overflow-x: hidden; 
-    cursor: crosshair; 
+    background: var(--bg); color: var(--text); font-family: var(--mono); 
+    overflow-x: hidden; cursor: crosshair; padding-top: 64px;
   }
 
-  /* SCANLINES & GRID */
   body::before, body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 100; }
   body::before { background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px); }
   body::after { 
@@ -40,17 +38,37 @@
     background-size: 40px 40px; z-index: 99;
   }
 
-  .main-content {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 80px 2rem 4rem;
-    text-align: center;
+  /* NAV */
+  .ops-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem; height: 64px; background: var(--nav-bg);
+    border-bottom: 1px solid var(--border); backdrop-filter: blur(12px);
+    transition: top 0.3s ease-in-out;
   }
+  .nav-hidden { top: -70px; }
+  .nav-logo {
+    font-family: var(--display); font-size: 1.2rem; font-weight: 900; color: var(--green);
+    letter-spacing: 0.12em; text-shadow: 0 0 14px var(--green); text-decoration: none;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-links { display: flex; align-items: center; gap: 2rem; }
+  .nav-link {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--text-dim);
+    text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; text-transform: uppercase;
+  }
+  .nav-link:hover { color: var(--green); text-shadow: 0 0 8px var(--green); }
+  .nav-link.active { color: var(--green); }
+  .nav-btn {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--black); background: var(--green);
+    padding: 0.45rem 1.1rem; border: none; cursor: pointer; letter-spacing: 0.1em;
+    text-transform: uppercase; text-decoration: none; font-weight: 700;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); transition: all 0.2s;
+  }
+  .nav-btn:hover { background: #00ff70; box-shadow: 0 0 20px rgba(0,255,65,0.5); transform: translateY(-1px); }
 
-  /* LOGO & HERO */
+  /* CONTENT */
+  .main-content { position: relative; z-index: 10; width: 100%; max-width: 800px; margin: 0 auto; padding: 80px 2rem 4rem; text-align: center; }
   .logo { font-family: var(--display); font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 900; margin-bottom: 0.15em; }
   .logo .bracket { color: var(--green-dim); }
   .logo .ops { color: var(--green); text-shadow: 0 0 30px rgba(0,255,65,0.5); }
@@ -62,7 +80,6 @@
   }
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: blink 1.2s infinite; }
 
-  /* TERMINAL */
   .terminal { width: 100%; background: #030d03; border: 1px solid var(--border); margin-bottom: 3rem; }
   .terminal-bar { background: #080f08; border-bottom: 1px solid var(--border); padding: 0.5rem 1rem; display: flex; align-items: center; justify-content: space-between; }
   .terminal-title { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
@@ -73,7 +90,6 @@
   .out.dim { color: var(--green-dark); }
   .cursor { display: inline-block; width: 8px; height: 15px; background: var(--green); animation: blink 1s step-end infinite; }
 
-  /* FEATURES */
   .section-header { font-family: var(--display); font-size: 1.5rem; color: #fff; margin-bottom: 2rem; text-transform: uppercase; border-left: 4px solid var(--green); padding-left: 1rem; text-align: left; }
   .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 4rem; text-align: left; }
   .feat-card { background: rgba(0,255,65,0.02); border: 1px solid var(--border); padding: 1.5rem; transition: 0.3s; }
@@ -81,26 +97,17 @@
   .feat-card h3 { font-family: var(--display); font-size: 0.9rem; color: var(--green); margin-bottom: 0.5rem; }
   .feat-card p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; font-family: 'Rajdhani', sans-serif; }
 
-  /* COUNTDOWN */
   .countdown { display: flex; border: 1px solid var(--border); margin-bottom: 2rem; }
   .cd-unit { flex: 1; padding: 1.5rem 0.5rem; border-right: 1px solid var(--border); }
   .cd-unit:last-child { border-right: none; }
   .cd-num { font-family: var(--display); font-size: 2.2rem; color: var(--green); display: block; }
   .cd-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; }
 
-  /* FOOTER COMPONENT STYLES */
+  /* FOOTER */
   .ops-footer {
-    width: 100%;
-    padding: 3rem 2.5rem;
-    border-top: 1px solid rgba(0, 255, 65, 0.2);
-    background: #020902;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-    position: relative;
-    z-index: 110;
-    margin-top: 4rem; /* Adds space after the content */
+    width: 100%; padding: 3rem 2.5rem; border-top: 1px solid var(--border);
+    background: #020902; display: flex; justify-content: space-between;
+    align-items: center; gap: 2rem; position: relative; z-index: 110; margin-top: 4rem;
   }
   .footer-copyright { font-family: var(--mono); font-size: 0.75rem; color: var(--green-dark); letter-spacing: 0.05em; }
   .footer-support-btn {
@@ -111,144 +118,25 @@
   .footer-support-btn:hover { background: #00ff70; box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); transform: translateY(-2px); }
 
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-  
-  @media (max-width: 600px) {
+  @media (max-width: 640px) {
+    .ops-nav { padding: 0 1.5rem; }
+    .nav-link { display: none; }
     .ops-footer { flex-direction: column; text-align: center; }
   }
 </style>
 </head>
 <body>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --green: #00ff41;
-    --green-dim: #00c032;
-    --green-glow: rgba(0,255,65,0.18);
-    --black: #000000;
-    --nav-bg: rgba(3,10,3,0.92);
-    --border: rgba(0,255,65,0.22);
-    --text-dim: #4d8f55;
-    --mono: 'Share Tech Mono', monospace;
-    --display: 'Orbitron', sans-serif;
-  }
-
-  .ops-nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2.5rem;
-    height: 64px;
-    background: var(--nav-bg);
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    /* Transition for the slide effect */
-    transition: top 0.3s ease-in-out;
-  }
-
-  /* Hidden state class */
-  .nav-hidden {
-    top: -70px; /* Moves it just out of view */
-  }
-
-  .nav-logo {
-    font-family: var(--display);
-    font-size: 1.2rem;
-    font-weight: 900;
-    color: var(--green);
-    letter-spacing: 0.12em;
-    text-shadow: 0 0 14px var(--green);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  .nav-link {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--text-dim);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    transition: color 0.2s;
-    text-transform: uppercase;
-  }
-
-  .nav-link:hover {
-    color: var(--green);
-    text-shadow: 0 0 8px var(--green);
-  }
-
-  .nav-btn {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--black);
-    background: var(--green);
-    padding: 0.45rem 1.1rem;
-    border: none;
-    cursor: pointer;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-    transition: all 0.2s;
-    font-weight: 700;
-  }
-
-  .nav-btn:hover {
-    background: #00ff70;
-    box-shadow: 0 0 20px rgba(0,255,65,0.5);
-    transform: translateY(-1px);
-  }
-
-  /* Necessary padding so content isn't chopped off at the top */
-  body { padding-top: 64px; }
-
-  @media (max-width: 640px) {
-    .ops-nav { padding: 0 1.5rem; }
-    .nav-link { display: none; }
-  }
-</style>
 
 <nav class="ops-nav" id="navbar">
   <a href="https://opsbot.link/" class="nav-logo">
     <span style="color: var(--green-dim)">[</span>OPSBOT<span style="color: var(--green-dim)">]</span>
   </a>
-  
   <div class="nav-links">
-    <a href="https://opsbot.link/" class="nav-link">Home</a>
+    <a href="https://opsbot.link/" class="nav-link active">Home</a>
+    <a href="https://opsbot.link/terms" class="nav-link">Terms</a>
     <a href="https://opsbot.link/support" class="nav-btn">Support</a>
   </div>
 </nav>
-
-<script>
-  let lastScrollTop = 0;
-  const navbar = document.getElementById("navbar");
-
-  window.addEventListener("scroll", function() {
-    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-    // Check if scrolling down and if we've scrolled past the header height
-    if (scrollTop > lastScrollTop && scrollTop > 64) {
-      // Scroll Down - Hide Nav
-      navbar.classList.add("nav-hidden");
-    } else {
-      // Scroll Up - Show Nav
-      navbar.classList.remove("nav-hidden");
-    }
-    
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
-  }, false);
-</script>
 
 <div class="main-content">
   <div class="logo">
@@ -272,22 +160,10 @@
 
   <h2 class="section-header">Core Features</h2>
   <div class="feat-grid">
-    <div class="feat-card">
-      <h3>Easy Setup</h3>
-      <p>Plug-and-play configuration. Get your division up and running in minutes with an intuitive setup wizard.</p>
-    </div>
-    <div class="feat-card">
-      <h3>Modular Settings</h3>
-      <p>Toggle only the modules you need and keep your server clean by disabling unused commands.</p>
-    </div>
-    <div class="feat-card">
-      <h3>SEA Blacklist Sync</h3>
-      <p>Automated synchronization with official blacklists to keep your division secure.</p>
-    </div>
-    <div class="feat-card">
-      <h3>EXP & Member Tracking</h3>
-      <p>Purpose-built tracking for group-wide progression and milestones.</p>
-    </div>
+    <div class="feat-card"><h3>Easy Setup</h3><p>Plug-and-play configuration. Get your division up and running in minutes with an intuitive setup wizard.</p></div>
+    <div class="feat-card"><h3>Modular Settings</h3><p>Toggle only the modules you need and keep your server clean by disabling unused commands.</p></div>
+    <div class="feat-card"><h3>SEA Blacklist Sync</h3><p>Automated synchronization with official blacklists to keep your division secure.</p></div>
+    <div class="feat-card"><h3>EXP & Member Tracking</h3><p>Purpose-built tracking for group-wide progression and milestones.</p></div>
   </div>
 
   <h2 class="section-header">Deployment Countdown</h2>
@@ -303,12 +179,19 @@
   <div class="footer-copyright">
     &copy; OPSBOT 2026. ALL RIGHTS RESERVED.
   </div>
-  <a href="https://opsbot.link/support" class="footer-support-btn">
-    Get Support
-  </a>
+  <a href="https://opsbot.link/support" class="footer-support-btn">Get Support</a>
 </footer>
 
 <script>
+  let lastScrollTop = 0;
+  const navbar = document.getElementById("navbar");
+  window.addEventListener("scroll", function() {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > lastScrollTop && scrollTop > 64) { navbar.classList.add("nav-hidden"); } 
+    else { navbar.classList.remove("nav-hidden"); }
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  }, false);
+
   const lines = [
     { type: 'cmd', text: 'opsbot --init' },
     { type: 'out', text: 'Loading core modules...' },
@@ -326,22 +209,16 @@
 
   const body = document.getElementById('termBody');
   let i = 0;
-
   function addLine() {
     if (i >= lines.length) return;
     const l = lines[i++];
     const div = document.createElement('div');
-    if (l.type === 'cmd') {
-      div.innerHTML = `<span class="prompt">$</span><span class="cmd"> ${l.text}</span>`;
-    } else {
-      const cls = l.cls ? ` ${l.cls}` : '';
-      div.innerHTML = `<span class="out${cls}">${l.text}</span>`;
-    }
+    if (l.type === 'cmd') { div.innerHTML = `<span class="prompt">$</span><span class="cmd"> ${l.text}</span>`; } 
+    else { const cls = l.cls ? ` ${l.cls}` : ''; div.innerHTML = `<span class="out${cls}">${l.text}</span>`; }
     body.insertBefore(div, body.querySelector('.cursor-line'));
     body.scrollTop = body.scrollHeight;
     setTimeout(addLine, l.type === 'cmd' ? 150 : 60);
   }
-
   setTimeout(addLine, 500);
 
   const target = new Date('2026-04-25T12:00:00Z');
@@ -352,9 +229,7 @@
     document.getElementById('cd-m').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
     document.getElementById('cd-s').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
   }
-  setInterval(tick, 1000);
-  tick();
+  setInterval(tick, 1000); tick();
 </script>
-
 </body>
 </html>
