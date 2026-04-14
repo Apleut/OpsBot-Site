@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OPSBOT — Coming Soon</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --green: #00ff41;
@@ -22,203 +22,98 @@
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   
-  html, body { 
-    min-height: 100%; 
-    background: var(--bg);
+  html { scroll-behavior: smooth; }
+
+  body { 
+    background: var(--bg); 
+    color: var(--text); 
+    font-family: var(--mono); 
+    overflow-x: hidden; 
+    cursor: crosshair; 
   }
 
-  body {
-    color: var(--text);
-    font-family: var(--mono);
-    overflow-y: auto;
-    overflow-x: hidden;
-    cursor: crosshair;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* FIX: Anchor to top so it only expands downwards */
-    justify-content: flex-start;
-    padding-top: 10vh; 
-    padding-bottom: 5vh;
-  }
-
-  /* SCANLINES & GRID (Fixed to viewport) */
-  body::before, body::after {
-    content: '';
-    position: fixed; inset: 0;
-    pointer-events: none;
-  }
-  body::before {
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
-    z-index: 100;
-  }
-  body::after {
+  /* SCANLINES & GRID */
+  body::before, body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+  body::before { background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px); }
+  body::after { 
     background-image: linear-gradient(rgba(0,255,65,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,65,0.025) 1px, transparent 1px);
-    background-size: 40px 40px;
-    z-index: 99;
+    background-size: 40px 40px; z-index: 99;
   }
 
-  .bg-glow {
-    position: fixed; inset: 0;
-    background: radial-gradient(ellipse at 50% 50%, rgba(0,255,65,0.07) 0%, transparent 65%);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .container {
+  .main-content {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 700px;
-    padding: 0 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 80px 2rem 4rem;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 
-  /* LOGO */
-  .logo {
-    font-family: var(--display);
-    font-size: clamp(3rem, 8vw, 6.5rem);
-    font-weight: 900;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    margin-bottom: 0.15em;
-    opacity: 0;
-    animation: fadein 0.4s 0.2s forwards;
-  }
-  .logo .bracket { color: var(--green-dim); text-shadow: 0 0 20px rgba(0,200,50,0.4); }
-  .logo .ops { color: var(--green); text-shadow: 0 0 30px rgba(0,255,65,0.5), 0 0 60px rgba(0,255,65,0.2); }
+  /* LOGO & HERO */
+  .logo { font-family: var(--display); font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 900; margin-bottom: 0.15em; }
+  .logo .bracket { color: var(--green-dim); }
+  .logo .ops { color: var(--green); text-shadow: 0 0 30px rgba(0,255,65,0.5); }
   .logo .bot { color: #fff; }
 
-  .status-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: 1px solid var(--border);
-    padding: 0.3rem 0.9rem;
-    font-size: 0.68rem;
-    letter-spacing: 0.25em;
-    color: var(--green-dim);
-    text-transform: uppercase;
-    margin-bottom: 2.5rem;
-    opacity: 0;
-    animation: fadein 0.4s 0.5s forwards;
+  .status-chip { 
+    display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border); 
+    padding: 0.3rem 0.9rem; font-size: 0.68rem; color: var(--green-dim); text-transform: uppercase; margin-bottom: 2.5rem; 
   }
-  .status-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 6px var(--green);
-    animation: blink 1.2s ease-in-out infinite;
-  }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: blink 1.2s infinite; }
 
-  /* TERMINAL FIXES */
-  .terminal {
-    width: 100%;
-    background: #030d03;
-    border: 1px solid var(--border);
-    margin-bottom: 2.5rem;
-    opacity: 0;
-    animation: fadein 0.4s 0.7s forwards;
-    display: flex;
-    flex-direction: column;
-  }
-  .terminal-bar {
-    background: #080f08;
-    border-bottom: 1px solid var(--border);
-    padding: 0.5rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .t-dot { width: 9px; height: 9px; border-radius: 50%; }
-  .t-r { background: #2a0d0d; }
-  .t-y { background: #2a220d; }
-  .t-g { background: var(--green-dark); }
-  .terminal-title { font-size: 0.65rem; color: var(--text-dim); margin: 0 auto; letter-spacing: 0.1em; }
-
-  .terminal-body {
-    padding: 1.2rem 1.4rem;
-    font-size: 0.78rem;
-    line-height: 2;
-    text-align: left;
-    /* FIX: Defined height and scrollable */
-    height: 250px; 
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--green-dark) transparent;
-  }
-  .terminal-body::-webkit-scrollbar { width: 4px; }
-  .terminal-body::-webkit-scrollbar-thumb { background: var(--green-dark); }
-
-  .line { display: flex; gap: 0.6rem; opacity: 0; }
-  .line.visible { opacity: 1; }
-  .prompt { color: var(--green-dim); flex-shrink: 0; }
-  .cmd { color: #fff; }
-  .out { color: var(--text-dim); padding-left: 1.2rem; }
+  /* TERMINAL */
+  .terminal { width: 100%; background: #030d03; border: 1px solid var(--border); margin-bottom: 3rem; }
+  .terminal-bar { background: #080f08; border-bottom: 1px solid var(--border); padding: 0.5rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+  .terminal-title { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
+  .terminal-body { padding: 1.2rem; font-size: 0.78rem; line-height: 1.8; text-align: left; height: 220px; overflow-y: auto; }
+  .prompt { color: var(--green-dim); }
   .out.green { color: var(--green); }
   .out.warn { color: #e07b30; }
   .out.dim { color: var(--green-dark); }
-  .cursor-line { display: flex; gap: 0.6rem; }
   .cursor { display: inline-block; width: 8px; height: 15px; background: var(--green); animation: blink 1s step-end infinite; }
 
-  /* COUNTDOWN FIXES */
-  .countdown-label { font-size: 0.68rem; letter-spacing: 0.4em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.8rem; opacity: 0; animation: fadein 0.4s 0.9s forwards; }
-  .countdown {
-    display: flex;
-    margin-bottom: 2.5rem;
-    border: 1px solid var(--border);
-    opacity: 0;
-    animation: fadein 0.4s 1s forwards;
-  }
-  .cd-unit {
-    flex: 1;
-    padding: 1.2rem 0.5rem 1rem;
-    border-right: 1px solid var(--border);
-    text-align: center;
-  }
+  /* FEATURES */
+  .section-header { font-family: var(--display); font-size: 1.5rem; color: #fff; margin-bottom: 2rem; text-transform: uppercase; border-left: 4px solid var(--green); padding-left: 1rem; text-align: left; }
+  .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 4rem; text-align: left; }
+  .feat-card { background: rgba(0,255,65,0.02); border: 1px solid var(--border); padding: 1.5rem; transition: 0.3s; }
+  .feat-card:hover { border-color: var(--green); background: rgba(0,255,65,0.05); }
+  .feat-card h3 { font-family: var(--display); font-size: 0.9rem; color: var(--green); margin-bottom: 0.5rem; }
+  .feat-card p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; font-family: 'Rajdhani', sans-serif; }
+
+  /* COUNTDOWN */
+  .countdown { display: flex; border: 1px solid var(--border); margin-bottom: 2rem; }
+  .cd-unit { flex: 1; padding: 1.5rem 0.5rem; border-right: 1px solid var(--border); }
   .cd-unit:last-child { border-right: none; }
-  .cd-num { font-family: var(--display); font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 900; color: var(--green); text-shadow: 0 0 20px rgba(0,255,65,0.35); line-height: 1; display: block; }
-  .cd-label { font-size: 0.6rem; letter-spacing: 0.2em; color: var(--text-dim); text-transform: uppercase; margin-top: 0.4rem; display: block; }
+  .cd-num { font-family: var(--display); font-size: 2.2rem; color: var(--green); display: block; }
+  .cd-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; }
 
-  .bottom-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  /* FOOTER COMPONENT STYLES */
+  .ops-footer {
     width: 100%;
-    opacity: 0;
-    animation: fadein 0.4s 1.1s forwards;
-    padding-bottom: 2rem;
+    padding: 3rem 2.5rem;
+    border-top: 1px solid rgba(0, 255, 65, 0.2);
+    background: #020902;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    position: relative;
+    z-index: 110;
+    margin-top: 4rem; /* Adds space after the content */
   }
-  .domain { font-size: 0.72rem; color: var(--green-dark); letter-spacing: 0.12em; }
-  .tagline { font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.08em; }
-  .notify-btn {
-    font-family: var(--mono); font-size: 0.72rem; color: #000; background: var(--green); padding: 0.5rem 1.2rem; cursor: pointer; text-transform: uppercase; 
-    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); text-decoration: none; transition: 0.2s;
+  .footer-copyright { font-family: var(--mono); font-size: 0.75rem; color: var(--green-dark); letter-spacing: 0.05em; }
+  .footer-support-btn {
+    font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: #000; background: var(--green);
+    padding: 0.6rem 1.4rem; text-decoration: none; text-transform: uppercase;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); transition: 0.2s;
   }
-  .notify-btn:hover { background: #00ff70; box-shadow: 0 0 20px rgba(0,255,65,0.4); }
+  .footer-support-btn:hover { background: #00ff70; box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); transform: translateY(-2px); }
 
-  /* CORNERS */
-  .corner { position: fixed; width: 40px; height: 40px; z-index: 110; pointer-events: none; }
-  .corner.tl { top: 20px; left: 20px; }
-  .corner.tr { top: 20px; right: 20px; transform: scaleX(-1); }
-  .corner.bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
-  .corner.br { bottom: 20px; right: 20px; transform: scale(-1); }
-
-  @keyframes fadein { to { opacity: 1; } }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-  /* MOBILE RESPONSIVENESS */
+  
   @media (max-width: 600px) {
-    body { padding-top: 5vh; }
-    .countdown { flex-wrap: wrap; }
-    .cd-unit { flex: 1 1 45%; border-bottom: 1px solid var(--border); }
-    .cd-unit:nth-child(2n) { border-right: none; }
-    .cd-unit:nth-last-child(-n+2) { border-bottom: none; }
-    .bottom-row { flex-direction: column; gap: 1.5rem; }
-    .tagline { display: none; }
+    .ops-footer { flex-direction: column; text-align: center; }
   }
 </style>
 </head>
@@ -355,64 +250,78 @@
   }, false);
 </script>
 
-<div class="bg-glow"></div>
-
-<div class="corner tl"><svg viewBox="0 0 40 40" fill="none"><polyline points="40,2 2,2 2,40" stroke="#00ff41" stroke-width="2" stroke-opacity="0.6"/></svg></div>
-<div class="corner tr"><svg viewBox="0 0 40 40" fill="none"><polyline points="40,2 2,2 2,40" stroke="#00ff41" stroke-width="2" stroke-opacity="0.6"/></svg></div>
-<div class="corner bl"><svg viewBox="0 0 40 40" fill="none"><polyline points="40,2 2,2 2,40" stroke="#00ff41" stroke-width="2" stroke-opacity="0.6"/></svg></div>
-<div class="corner br"><svg viewBox="0 0 40 40" fill="none"><polyline points="40,2 2,2 2,40" stroke="#00ff41" stroke-width="2" stroke-opacity="0.6"/></svg></div>
-
-<div class="container">
+<div class="main-content">
   <div class="logo">
     <span class="bracket">[</span><span class="ops">OPS</span><span class="bot">BOT</span><span class="bracket">]</span>
   </div>
 
   <div class="status-chip">
     <span class="status-dot"></span>
-    System initializing
+    System Initializing
   </div>
 
   <div class="terminal">
     <div class="terminal-bar">
-      <div class="t-dot t-r"></div>
-      <div class="t-dot t-y"></div>
-      <div class="t-dot t-g"></div>
-      <span class="terminal-title">OPSBOT — BOOT SEQUENCE</span>
+      <span class="terminal-title">BOOT_SEQUENCE</span>
+      <div style="display:flex; gap:4px;"><div style="width:8px;height:8px;border-radius:50%;background:#333;"></div><div style="width:8px;height:8px;border-radius:50%;background:#333;"></div></div>
     </div>
     <div class="terminal-body" id="termBody">
       <div class="cursor-line"><span class="prompt">$</span> <span class="cursor"></span></div>
     </div>
   </div>
 
-  <div class="countdown-label">// Estimated deployment</div>
+  <h2 class="section-header">Core Features</h2>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <h3>Easy Setup</h3>
+      <p>Plug-and-play configuration. Get your division up and running in minutes with an intuitive setup wizard.</p>
+    </div>
+    <div class="feat-card">
+      <h3>Modular Settings</h3>
+      <p>Toggle only the modules you need and keep your server clean by disabling unused commands.</p>
+    </div>
+    <div class="feat-card">
+      <h3>SEA Blacklist Sync</h3>
+      <p>Automated synchronization with official blacklists to keep your division secure.</p>
+    </div>
+    <div class="feat-card">
+      <h3>EXP & Member Tracking</h3>
+      <p>Purpose-built tracking for group-wide progression and milestones.</p>
+    </div>
+  </div>
+
+  <h2 class="section-header">Deployment Countdown</h2>
   <div class="countdown">
     <div class="cd-unit"><span class="cd-num" id="cd-d">00</span><span class="cd-label">Days</span></div>
     <div class="cd-unit"><span class="cd-num" id="cd-h">00</span><span class="cd-label">Hours</span></div>
     <div class="cd-unit"><span class="cd-num" id="cd-m">00</span><span class="cd-label">Minutes</span></div>
     <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><span class="cd-label">Seconds</span></div>
   </div>
-
-  <div class="bottom-row">
-    <span class="domain">opsbot.link</span>
-    <span class="tagline">The Only Bot Your Division Will Ever Need</span>
-    <a href="https://opsbot.link/support" class="notify-btn">Contact Us</a>
-  </div>
 </div>
+
+<footer class="ops-footer">
+  <div class="footer-copyright">
+    &copy; OPSBOT 2026. ALL RIGHTS RESERVED.
+  </div>
+  <a href="https://opsbot.link/support" class="footer-support-btn">
+    Get Support
+  </a>
+</footer>
 
 <script>
   const lines = [
-    { type: 'cmd',  text: 'opsbot --init' },
-    { type: 'out',  text: 'Loading core modules...' },
-    { type: 'out',  text: 'SEA blacklist sync........... OK', cls: 'green' },
-    { type: 'out',  text: 'Division EXP tracker......... OK', cls: 'green' },
-    { type: 'out',  text: 'Event host engine............ OK', cls: 'green' },
-    { type: 'out',  text: 'Analytics digest............. OK', cls: 'green' },
-    { type: 'out',  text: 'Module toggle system......... OK', cls: 'green' },
-    { type: 'out',  text: 'Officer quota and warnings... OK', cls: 'green' },
-    { type: 'out',  text: 'Moderation and logging....... OK', cls: 'green' },
-    { type: 'out',  text: '' },
-    { type: 'out',  text: 'WARNING: Deployment pending', cls: 'warn' },
-    { type: 'out',  text: 'Standing by for launch...', cls: 'dim' },
+    { type: 'cmd', text: 'opsbot --init' },
+    { type: 'out', text: 'Loading core modules...' },
+    { type: 'out', text: 'SEA blacklist sync........... OK', cls: 'green' },
+    { type: 'out', text: 'Division EXP tracker......... OK', cls: 'green' },
+    { type: 'out', text: 'Event host engine............ OK', cls: 'green' },
+    { type: 'out', text: 'Analytics digest............. OK', cls: 'green' },
+    { type: 'out', text: 'Module toggle system......... OK', cls: 'green' },
+    { type: 'out', text: 'Officer quota and warnings... OK', cls: 'green' },
+    { type: 'out', text: 'Moderation and logging....... OK', cls: 'green' },
+    { type: 'out', text: '' },
+    { type: 'out', text: 'WARNING: Deployment pending', cls: 'warn' },
+    { type: 'out', text: 'Standing by for launch...', cls: 'dim' },
   ];
 
   const body = document.getElementById('termBody');
@@ -422,42 +331,30 @@
     if (i >= lines.length) return;
     const l = lines[i++];
     const div = document.createElement('div');
-    div.className = 'line visible';
-
     if (l.type === 'cmd') {
       div.innerHTML = `<span class="prompt">$</span><span class="cmd"> ${l.text}</span>`;
     } else {
       const cls = l.cls ? ` ${l.cls}` : '';
       div.innerHTML = `<span class="out${cls}">${l.text}</span>`;
     }
-
-    const cursor = body.querySelector('.cursor-line');
-    body.insertBefore(div, cursor);
-    
-    // FIX: Auto-scroll terminal
+    body.insertBefore(div, body.querySelector('.cursor-line'));
     body.scrollTop = body.scrollHeight;
-
-    setTimeout(addLine, i === 1 ? 300 : l.text === '' ? 80 : 120);
+    setTimeout(addLine, l.type === 'cmd' ? 150 : 60);
   }
 
-  setTimeout(addLine, 900);
+  setTimeout(addLine, 500);
 
   const target = new Date('2026-04-25T12:00:00Z');
-  function pad(n) { return String(n).padStart(2, '0'); }
   function tick() {
-    const now = new Date();
-    const diff = Math.max(0, target - now);
-    const s = Math.floor(diff / 1000) % 60;
-    const m = Math.floor(diff / 60000) % 60;
-    const h = Math.floor(diff / 3600000) % 24;
-    const d = Math.floor(diff / 86400000);
-    document.getElementById('cd-d').textContent = pad(d);
-    document.getElementById('cd-h').textContent = pad(h);
-    document.getElementById('cd-m').textContent = pad(m);
-    document.getElementById('cd-s').textContent = pad(s);
+    const diff = Math.max(0, target - new Date());
+    document.getElementById('cd-d').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+    document.getElementById('cd-h').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+    document.getElementById('cd-m').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+    document.getElementById('cd-s').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
   }
-  tick();
   setInterval(tick, 1000);
+  tick();
 </script>
+
 </body>
 </html>
