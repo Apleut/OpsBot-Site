@@ -3,23 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OPSBOT — Coming Soon</title>
-<meta name="title" content="OPSBOT — Next-Gen Division Management">
+<title>OPSBOT — SEA Division Automation</title>
+<meta name="title" content="OPSBOT — SEA Division Automation">
 <meta name="description" content="Automated SEA blacklist sync, EXP tracking, and advanced moderation built for high-performance SEA Military divisions.">
 <meta name="theme-color" content="#00ff41">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://opsbot.link/">
-<meta property="og:title" content="OPSBOT — Next-Gen Division Management">
+<meta property="og:title" content="OPSBOT — SEA Division Automation">
 <meta property="og:description" content="Automated SEA blacklist sync, EXP tracking, and advanced moderation built for high-performance SEA Military divisions.">
 <meta property="og:image" content="https://opsbot.link/embed-image.png">
 
 <meta name="twitter:card" content="summary">
 <meta name="twitter:url" content="https://opsbot.link/">
-<meta name="twitter:title" content="OPSBOT — Next-Gen Division Management">
+<meta name="twitter:title" content="OPSBOT — SEA Division Automation">
 <meta name="twitter:description" content="Automated SEA blacklist sync, EXP tracking, and advanced moderation built for high-performance SEA Military divisions.">
 <meta name="twitter:image" content="https://opsbot.link/embed-image.png">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -28,29 +28,54 @@
     --green-dark: #006618;
     --green-glow: rgba(0,255,65,0.18);
     --black: #000000;
-    --bg: #020902;
+    --bg: #030a03;
     --surface: #070f07;
-    --nav-bg: rgba(3,10,3,0.92);
+    --surface2: #0b180b;
     --border: rgba(0,255,65,0.22);
     --text: #b8f5c0;
     --text-dim: #4d8f55;
     --mono: 'Share Tech Mono', monospace;
     --display: 'Orbitron', sans-serif;
+    --body: 'Rajdhani', sans-serif;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   html { scroll-behavior: smooth; }
 
-  body { 
-    background: var(--bg); color: var(--text); font-family: var(--mono); 
-    overflow-x: hidden; cursor: crosshair; padding-top: 64px;
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    overflow-x: hidden;
+    cursor: crosshair;
   }
 
-  body::before, body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 100; }
-  body::before { background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px); }
-  body::after { 
-    background-image: linear-gradient(rgba(0,255,65,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,65,0.025) 1px, transparent 1px);
-    background-size: 40px 40px; z-index: 99;
+  /* SCANLINE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.07) 2px,
+      rgba(0,0,0,0.07) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* GRID TEXTURE */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,65,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,65,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 999;
   }
 
   /* NAV */
@@ -73,7 +98,6 @@
     text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; text-transform: uppercase;
   }
   .nav-link:hover { color: var(--green); text-shadow: 0 0 8px var(--green); }
-  .nav-link.active { color: var(--green); }
   .nav-btn {
     font-family: var(--mono); font-size: 0.78rem; color: var(--black); background: var(--green);
     padding: 0.45rem 1.1rem; border: none; cursor: pointer; letter-spacing: 0.1em;
@@ -82,48 +106,387 @@
   }
   .nav-btn:hover { background: #00ff70; box-shadow: 0 0 20px rgba(0,255,65,0.5); transform: translateY(-1px); }
 
-  /* CONTENT */
-  .main-content { position: relative; z-index: 10; width: 100%; max-width: 800px; margin: 0 auto; padding: 80px 2rem 4rem; text-align: center; }
-  .logo { font-family: var(--display); font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 900; margin-bottom: 0.15em; }
-  .logo .bracket { color: var(--green-dim); }
-  .logo .ops { color: var(--green); text-shadow: 0 0 30px rgba(0,255,65,0.5); }
-  .logo .bot { color: #fff; }
-
-  .status-chip { 
-    display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border); 
-    padding: 0.3rem 0.9rem; font-size: 0.68rem; color: var(--green-dim); text-transform: uppercase; margin-bottom: 2.5rem; 
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 100px 2rem 4rem;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
   }
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: blink 1.2s infinite; }
+  .hero-bg-circle {
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,255,65,0.06) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse-glow 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+  }
 
-  .terminal { width: 100%; background: #030d03; border: 1px solid var(--border); margin-bottom: 3rem; }
-  .terminal-bar { background: #080f08; border-bottom: 1px solid var(--border); padding: 0.5rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-  .terminal-title { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
-  .terminal-body { padding: 1.2rem; font-size: 0.78rem; line-height: 1.8; text-align: left; height: 220px; overflow-y: auto; }
-  .prompt { color: var(--green-dim); }
-  .out.green { color: var(--green); }
-  .out.warn { color: #e07b30; }
-  .out.dim { color: var(--green-dark); }
-  .cursor { display: inline-block; width: 8px; height: 15px; background: var(--green); animation: blink 1s step-end infinite; }
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green-dim);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 0.35rem 1rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadein 0.6s 0.2s forwards;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: 0 0 40px rgba(0,255,65,0.5), 0 0 80px rgba(0,255,65,0.2);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3em;
+    opacity: 0;
+    animation: fadein 0.6s 0.4s forwards;
+  }
+  .hero h1 span { color: #fff; text-shadow: none; }
+  .hero-sub {
+    font-family: var(--display);
+    font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadein 0.6s 0.6s forwards;
+  }
+  .hero-desc {
+    font-size: 1.15rem;
+    color: var(--text-dim);
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadein 0.6s 0.8s forwards;
+  }
+  .hero-buttons {
+    display: flex; gap: 1rem;
+    opacity: 0;
+    animation: fadein 0.6s 1s forwards;
+  }
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--black);
+    background: var(--green);
+    padding: 0.8rem 2rem;
+    border: none; cursor: pointer;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #00ff70; box-shadow: 0 0 30px rgba(0,255,65,0.6); transform: translateY(-2px); }
+  .btn-secondary {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--green);
+    background: transparent;
+    padding: 0.8rem 2rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--green); background: var(--green-glow); transform: translateY(-2px); }
 
-  .section-header { font-family: var(--display); font-size: 1.5rem; color: #fff; margin-bottom: 2rem; text-transform: uppercase; border-left: 4px solid var(--green); padding-left: 1rem; text-align: left; }
-  .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 4rem; text-align: left; }
-  .feat-card { background: rgba(0,255,65,0.02); border: 1px solid var(--border); padding: 1.5rem; transition: 0.3s; }
-  .feat-card:hover { border-color: var(--green); background: rgba(0,255,65,0.05); }
-  .feat-card h3 { font-family: var(--display); font-size: 0.9rem; color: var(--green); margin-bottom: 0.5rem; }
-  .feat-card p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; font-family: 'Rajdhani', sans-serif; }
+  /* TERMINAL TICKER */
+  .ticker {
+    width: 100%;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 0;
+    overflow: hidden;
+  }
+  .ticker-inner {
+    display: flex; gap: 4rem;
+    white-space: nowrap;
+    animation: ticker-scroll 30s linear infinite;
+  }
+  .ticker-item {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green-dim);
+    letter-spacing: 0.08em;
+    display: flex; align-items: center; gap: 0.5rem;
+    flex-shrink: 0;
+  }
+  .ticker-item .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: blink 1.5s ease-in-out infinite;
+  }
+  @keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 
-  .countdown { display: flex; border: 1px solid var(--border); margin-bottom: 2rem; }
-  .cd-unit { flex: 1; padding: 1.5rem 0.5rem; border-right: 1px solid var(--border); }
-  .cd-unit:last-child { border-right: none; }
-  .cd-num { font-family: var(--display); font-size: 2.2rem; color: var(--green); display: block; }
-  .cd-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; }
+  /* STATS BAR */
+  .stats-bar {
+    display: flex; gap: 0; justify-content: center;
+    padding: 0 2rem;
+    max-width: 1000px; margin: 4rem auto 0;
+    border: 1px solid var(--border);
+  }
+  .stat {
+    flex: 1;
+    text-align: center;
+    padding: 2rem 1rem;
+    border-right: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat:last-child { border-right: none; }
+  .stat::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, var(--green-glow), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .stat:hover::before { opacity: 1; }
+  .stat-num {
+    font-family: var(--display);
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: 0 0 20px rgba(0,255,65,0.4);
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  /* SECTION */
+  section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green-dim);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .section-tag::before { content: '// '; }
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+  }
+  h2 .accent { color: var(--green); text-shadow: 0 0 20px rgba(0,255,65,0.4); }
+  .section-desc {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 3.5rem;
+  }
+
+  /* FEATURES GRID */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .feature-card {
+    background: var(--surface);
+    padding: 2.2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .feature-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feature-card:hover { background: var(--surface2); }
+  .feature-card:hover::after { opacity: 1; }
+  .feature-icon {
+    font-size: 2rem;
+    margin-bottom: 1.2rem;
+    display: block;
+    filter: drop-shadow(0 0 8px var(--green));
+  }
+  .feature-num {
+    position: absolute;
+    top: 1.5rem; right: 1.8rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--green-dark);
+    letter-spacing: 0.1em;
+  }
+  .feature-card h3 {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+  .feature-card p {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+  .feature-card .tag-list {
+    margin-top: 1.2rem;
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .feature-tag {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--green-dim);
+    border: 1px solid rgba(0,255,65,0.15);
+    padding: 0.2rem 0.5rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* TERMINAL DEMO */
+  .terminal-section {
+    padding: 6rem 2rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .terminal-wrapper {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .terminal-text .section-tag { margin-bottom: 0.8rem; }
+  .terminal-text h2 { margin-bottom: 1rem; }
+  .terminal-text p { font-size: 1rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 1.5rem; }
+  .terminal-box {
+    background: #020802;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(0,255,65,0.08), 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .terminal-bar {
+    background: #0a130a;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .t-dot-r { background: #3d1010; }
+  .t-dot-y { background: #3d3210; }
+  .t-dot-g { background: var(--green-dark); }
+  .terminal-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin-left: auto; margin-right: auto;
+  }
+  .terminal-body { padding: 1.5rem; font-family: var(--mono); font-size: 0.8rem; line-height: 1.8; }
+  .t-prompt { color: var(--green-dim); }
+  .t-cmd { color: #fff; }
+  .t-output { color: var(--text-dim); padding-left: 1rem; }
+  .t-highlight { color: var(--green); }
+  .t-warn { color: #ff6b35; }
+  .t-success { color: var(--green); font-weight: 700; }
+  .t-cursor {
+    display: inline-block; width: 8px; height: 14px;
+    background: var(--green); vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* HOW IT WORKS */
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border: 1px solid var(--border);
+    max-width: 1000px; margin: 0 auto;
+  }
+  .step {
+    padding: 2.5rem 1.8rem;
+    border-right: 1px solid var(--border);
+    position: relative;
+    text-align: center;
+  }
+  .step:last-child { border-right: none; }
+  .step-num {
+    font-family: var(--display);
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--green-dark);
+    line-height: 1;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .step h4 {
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.7rem;
+  }
+  .step p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; }
+
+  /* CTA */
+  .cta-section {
+    padding: 8rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,255,65,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-section h2 { margin-bottom: 1rem; }
+  .cta-section p { font-size: 1.1rem; color: var(--text-dim); margin-bottom: 2.5rem; max-width: 480px; display: block; margin-left: auto; margin-right: auto; }
+  .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
   /* FOOTER */
-  .ops-footer {
-    width: 100%; padding: 3rem 2.5rem; border-top: 1px solid var(--border);
-    background: #020902; display: flex; justify-content: space-between;
-    align-items: center; gap: 2rem; position: relative; z-index: 110; margin-top: 4rem;
-  }
+  .ops-footer { width: 100%; padding: 3rem 2.5rem; border-top: 1px solid var(--border); background: #020902; display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; }
   .footer-copyright { font-family: var(--mono); font-size: 0.75rem; color: var(--green-dark); letter-spacing: 0.05em; }
   .footer-support-btn {
     font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: #000; background: var(--green);
@@ -132,120 +495,201 @@
   }
   .footer-support-btn:hover { background: #00ff70; box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); transform: translateY(-2px); }
 
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
   @media (max-width: 640px) {
-    .ops-nav { padding: 0 1.5rem; }
-    .nav-link { display: none; }
-    .ops-footer { flex-direction: column; text-align: center; }
+    .ops-nav { padding: 0 1.5rem; } .nav-link { display: none; }
+    .ops-footer { flex-direction: column; text-align: center; gap: 2rem; }
+  }
+
+  @keyframes fadein { to { opacity: 1; } }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .terminal-wrapper { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr 1fr; }
+    .step { border-bottom: 1px solid var(--border); }
+    nav .nav-links { display: none; }
+    .stats-bar { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .stat:last-child { border-bottom: none; }
+    .hero h1 { font-size: 3rem; }
   }
 </style>
 </head>
 <body>
 
 <nav class="ops-nav" id="navbar">
-  <a href="https://opsbot.link/" class="nav-logo">
-    <span style="color: var(--green-dim)">[</span>OPSBOT<span style="color: var(--green-dim)">]</span>
-  </a>
+  <a href="https://opsbot.link/" class="nav-logo"><span style="color: var(--green-dim)">[</span>OPSBOT<span style="color: var(--green-dim)">]</span></a>
   <div class="nav-links">
-    <a href="https://opsbot.link/" class="nav-link active">Home</a>
+    <a href="https://opsbot.link/" class="nav-link">Home</a>
     <a href="https://opsbot.link/invite" class="nav-link">Invite</a>
     <a href="https://opsbot.link/terms" class="nav-link">Terms</a>
     <a href="https://opsbot.link/support" class="nav-btn">Support</a>
   </div>
 </nav>
 
-<div class="main-content">
-  <div class="logo">
-    <span class="bracket">[</span><span class="ops">OPS</span><span class="bot">BOT</span><span class="bracket">]</span>
+<!-- HERO -->
+<section class="hero" style="max-width:unset; padding-left:2rem; padding-right:2rem;">
+  <div class="hero-bg-circle"></div>
+  <div class="hero-tag">SEA-Integrated Division Automation</div>
+  <h1>OPS<span>BOT</span></h1>
+  <div class="hero-sub">Automate Your SEA Division</div>
+  <p class="hero-desc">Automate your entire SEA division operation — from blacklist enforcement and event hosting to EXP tracking and analytics — all in one easy-to-use system.</p>
+  <div class="hero-buttons">
+    <a href="https://opsbot.link/invite" class="btn-primary">Deploy Now</a>
+    <a href="#features" class="btn-secondary">View Features</a>
   </div>
+</section>
 
-  <div class="status-chip">
-    <span class="status-dot"></span>
-    System Initializing
+<!-- TICKER (full bleed, outside hero) -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker">
+    <!-- filled by JS -->
   </div>
+</div>
 
-  <div class="terminal">
-    <div class="terminal-bar">
-      <span class="terminal-title">BOOT_SEQUENCE</span>
-      <div style="display:flex; gap:4px;"><div style="width:8px;height:8px;border-radius:50%;background:#333;"></div><div style="width:8px;height:8px;border-radius:50%;background:#333;"></div></div>
+<!-- STATS -->
+<div style="max-width:1000px; margin: 0 auto; padding: 0 2rem;">
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" data-target="100">0</div><div class="stat-label">% Blacklist Coverage</div></div>
+    <div class="stat"><div class="stat-num" data-target="24">0</div><div class="stat-label">/ 7 Uptime</div></div>
+    <div class="stat"><div class="stat-num" id="stat-ms">30ms</div><div class="stat-label">Avg Response</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features" style="padding-top: 7rem;">
+  <div class="section-tag">capabilities</div>
+  <h2>Everything Your Division<br><span class="accent">Runs On.</span></h2>
+  <p class="section-desc">OPSBOT integrates directly with SEA infrastructure to give your division total command — no more spreadsheets, and no manual admin grinding.</p>
+
+  <div class="features-grid">
+
+    <div class="feature-card">
+      <span class="feature-num">02</span>
+      <h3>Event Hosting</h3>
+      <p>Spin up events with a single command. OPSBOT logs each event in your logging channel and generates SEA logging formats — letting officers host events without filing paperwork.</p>
     </div>
-    <div class="terminal-body" id="termBody">
-      <div class="cursor-line"><span class="prompt">$</span> <span class="cursor"></span></div>
+
+    <div class="feature-card">
+      <span class="feature-num">03</span>
+      <h3>Auto-Ban via SEA Blacklists</h3>
+      <p>The moment a user is added to the SEA blacklists, OPSBOT automatically bans them from your division server — no manual action required. Every enforcement action is logged with full context.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-num">05</span>
+      <h3>Division Analytics</h3>
+      <p>Weekly digest reports showing recruitment trends, event frequency, and EXP gain counts — all automatically compiled and posted to your specified channel.</p>
+    </div>
+
+
+    <div class="feature-card">
+      <span class="feature-num">06</span>
+      <h3>Fully Modular</h3>
+      <p>Don't need a feature? Turn it off. OPSBOT is built so every module can be independently enabled or disabled — your division runs exactly what it needs and nothing it doesn't.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section id="setup" style="text-align:center;">
+  <div class="section-tag">deployment</div>
+  <h2>Up in <span class="accent">4 Steps.</span></h2>
+  <p class="section-desc" style="margin-left:auto; margin-right:auto;">From invite to fully operational in under 10 minutes. OPSBOT is built to be dropped into any existing division setup.</p>
+  <div class="steps-grid">
+    <div class="step">
+      <span class="step-num">01</span>
+      <h4>Invite</h4>
+      <p>Add OPSBOT to your division server with the standard OAuth link.</p>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <h4>Configure</h4>
+      <p>Run <code style="color:var(--green); font-size:0.8rem;">/setup</code> to bind your rank roles, log channels, and division info.</p>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <h4>Sync</h4>
+      <p>OPSBOT pulls your SEA division data and starts tracking your EXP.</p>
+    </div>
+    <div class="step" style="border-right:none;">
+      <span class="step-num">04</span>
+      <h4>Deploy</h4>
+      <p>You're live. Commands are active, blacklist monitoring is on, and your division is automated.</p>
     </div>
   </div>
+</section>
 
-  <h2 class="section-header">Core Features</h2>
-  <div class="feat-grid">
-    <div class="feat-card"><h3>Easy Setup</h3><p>Plug-and-play configuration. Get your division up and running in minutes with an intuitive setup wizard.</p></div>
-    <div class="feat-card"><h3>Modular Settings</h3><p>Toggle only the modules you need and keep your server clean by disabling unused commands.</p></div>
-    <div class="feat-card"><h3>SEA Blacklist Sync</h3><p>Automated synchronization with official blacklists to keep your division secure.</p></div>
-    <div class="feat-card"><h3>EXP & Member Tracking</h3><p>Purpose-built tracking for group-wide progression and milestones.</p></div>
-  </div>
-
-  <h2 class="section-header">Deployment Countdown</h2>
-  <div class="countdown">
-    <div class="cd-unit"><span class="cd-num" id="cd-d">00</span><span class="cd-label">Days</span></div>
-    <div class="cd-unit"><span class="cd-num" id="cd-h">00</span><span class="cd-label">Hours</span></div>
-    <div class="cd-unit"><span class="cd-num" id="cd-m">00</span><span class="cd-label">Minutes</span></div>
-    <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><span class="cd-label">Seconds</span></div>
+<!-- CTA -->
+<div class="cta-section">
+  <div class="section-tag" style="display:block; text-align:center; margin-bottom:0.8rem;">get started</div>
+  <h2>Your Division.<br><span class="accent">Fully Automated.</span></h2>
+  <p>Stop spending officer hours on admin work. Let OPSBOT handle the logistics while your team focuses on what matters — operations.</p>
+  <div class="cta-buttons">
+    <a href="https://opsbot.link/invite" class="btn-primary">Add OPSBOT to Server</a>
+    <a href="https://opsbot.link/support" class="btn-secondary">Get Support</a>
   </div>
 </div>
 
 <footer class="ops-footer">
-  <div class="footer-copyright">
-    &copy; OPSBOT 2026. ALL RIGHTS RESERVED.
-  </div>
+  <div class="footer-copyright">&copy; OPSBOT 2026. ALL RIGHTS RESERVED.</div>
   <a href="https://opsbot.link/support" class="footer-support-btn">Get Support</a>
 </footer>
 
 <script>
-  let lastScrollTop = 0;
-  const navbar = document.getElementById("navbar");
-  window.addEventListener("scroll", function() {
-    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    if (scrollTop > lastScrollTop && scrollTop > 64) { navbar.classList.add("nav-hidden"); } 
-    else { navbar.classList.remove("nav-hidden"); }
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-  }, false);
-
-  const lines = [
-    { type: 'cmd', text: 'opsbot --init' },
-    { type: 'out', text: 'Loading core modules...' },
-    { type: 'out', text: 'SEA blacklist sync........... OK', cls: 'green' },
-    { type: 'out', text: 'Division EXP tracker......... OK', cls: 'green' },
-    { type: 'out', text: 'Event host engine............ OK', cls: 'green' },
-    { type: 'out', text: 'Analytics digest............. OK', cls: 'green' },
-    { type: 'out', text: 'Module toggle system......... OK', cls: 'green' },
-    { type: 'out', text: 'Officer quota and warnings... OK', cls: 'green' },
-    { type: 'out', text: 'Moderation and logging....... OK', cls: 'green' },
-    { type: 'out', text: '' },
-    { type: 'out', text: 'WARNING: Deployment pending', cls: 'warn' },
-    { type: 'out', text: 'Standing by for launch...', cls: 'dim' },
+  // Ticker
+  const items = [
+    'BLACKLIST SYNC ACTIVE','EVENT LOG ONLINE','EXP TRACKING ENABLED',
+    'AUTO-BAN MODULE ARMED','LEADERBOARD UPDATED','BLACKLIST SYNC ACTIVE',
+    'MODERATION LOGS LIVE','SEA INTEGRATION CONNECTED','AUTO-BAN MODULE ARMED',
   ];
+  const ticker = document.getElementById('ticker');
+  items.forEach(text => {
+    const el = document.createElement('div');
+    el.className = 'ticker-item';
+    el.innerHTML = `<span class="dot"></span>${text}`;
+    ticker.appendChild(el);
+  });
 
-  const body = document.getElementById('termBody');
-  let i = 0;
-  function addLine() {
-    if (i >= lines.length) return;
-    const l = lines[i++];
-    const div = document.createElement('div');
-    if (l.type === 'cmd') { div.innerHTML = `<span class="prompt">$</span><span class="cmd"> ${l.text}</span>`; } 
-    else { const cls = l.cls ? ` ${l.cls}` : ''; div.innerHTML = `<span class="out${cls}">${l.text}</span>`; }
-    body.insertBefore(div, body.querySelector('.cursor-line'));
-    body.scrollTop = body.scrollHeight;
-    setTimeout(addLine, l.type === 'cmd' ? 150 : 60);
+  // Counters — plain interval, runs immediately
+  function runCounter(el, from, to, duration, suffix) {
+    var start = null;
+    function tick(ts) {
+      if (!start) start = ts;
+      var pct = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - pct, 3);
+      el.textContent = Math.round(from + (to - from) * eased) + suffix;
+      if (pct < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
   }
-  setTimeout(addLine, 500);
 
-  const target = new Date('2026-05-24T12:00:00Z');
-  function tick() {
-    const diff = Math.max(0, target - new Date());
-    document.getElementById('cd-d').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
-    document.getElementById('cd-h').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
-    document.getElementById('cd-m').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
-    document.getElementById('cd-s').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
-  }
-  setInterval(tick, 1000); tick();
+  var s1 = document.querySelector('.stat-num[data-target="100"]');
+  var s2 = document.querySelector('.stat-num[data-target="24"]');
+  var s3 = document.getElementById('stat-ms');
+  if (s1) runCounter(s1, 0, 100, 1400, '%');
+  if (s2) { runCounter(s2, 0, 24, 1000, ''); s2.closest('.stat').querySelector('.stat-label').textContent = '/ 7 Uptime'; }
+  if (s3) runCounter(s3, 25, 30, 900, 'ms');
+
+  // Scroll reveal — exclude .stat from opacity:0 so counters aren't broken
+  const cards = document.querySelectorAll('.feature-card, .step');
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.style.transition = `opacity 0.5s ${i * 0.06}s, transform 0.5s ${i * 0.06}s`;
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  cards.forEach(c => {
+    c.style.opacity = '0';
+    c.style.transform = 'translateY(20px)';
+    revealObs.observe(c);
+  });
 </script>
 </body>
 </html>
