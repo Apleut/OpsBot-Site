@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Redirecting...</title>
+    <title>OPSBOT — Deploying...</title>
     <meta name="title" content="OPSBOT — Next-Gen Division Management">
     <meta name="description" content="Automated SEA blacklist sync, EXP tracking, and advanced moderation built for high-performance SEA Military divisions.">
     <meta name="theme-color" content="#00ff41">
@@ -20,9 +20,265 @@
     <meta name="twitter:image" content="https://opsbot.link/embed-image.png">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="canonical" href="https://discord.com/oauth2/authorize?client_id=1486065210275135518&permissions=7319981751008502&integration_type=0&scope=bot+applications.commands">
-    <meta http-equiv="refresh" content="0; URL=https://discord.com/oauth2/authorize?client_id=1486065210275135518&permissions=7319981751008502&integration_type=0&scope=bot+applications.commands">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      :root {
+        --green: #00ff41;
+        --green-dim: #00c032;
+        --green-dark: #006618;
+        --green-glow: rgba(0,255,65,0.18);
+        --black: #000000;
+        --bg: #030a03;
+        --surface: #070f07;
+        --border: rgba(0,255,65,0.22);
+        --text: #b8f5c0;
+        --text-dim: #4d8f55;
+        --mono: 'Share Tech Mono', monospace;
+        --display: 'Orbitron', sans-serif;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--mono);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        cursor: crosshair;
+      }
+
+      /* scanline overlay */
+      body::before {
+        content: '';
+        position: fixed; inset: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0,0,0,0.07) 2px,
+          rgba(0,0,0,0.07) 4px
+        );
+        pointer-events: none;
+        z-index: 100;
+      }
+
+      /* grid texture */
+      body::after {
+        content: '';
+        position: fixed; inset: 0;
+        background-image:
+          linear-gradient(rgba(0,255,65,0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,255,65,0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 99;
+      }
+
+      /* radial glow behind content */
+      .bg-glow {
+        position: fixed; inset: 0;
+        background: radial-gradient(ellipse at center, rgba(0,255,65,0.06) 0%, transparent 65%);
+        pointer-events: none;
+        z-index: 0;
+        animation: pulse-glow 4s ease-in-out infinite;
+      }
+      @keyframes pulse-glow {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+
+      .container {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2.5rem;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      /* logo */
+      .logo {
+        font-family: var(--display);
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--green);
+        letter-spacing: 0.12em;
+        text-shadow: 0 0 30px rgba(0,255,65,0.5), 0 0 60px rgba(0,255,65,0.2);
+        opacity: 0;
+        animation: fadein 0.5s 0.1s forwards;
+      }
+      .logo span { color: #fff; text-shadow: none; }
+
+      /* terminal box */
+      .terminal-box {
+        background: #020802;
+        border: 1px solid var(--border);
+        width: min(480px, 90vw);
+        box-shadow: 0 0 40px rgba(0,255,65,0.08), 0 20px 60px rgba(0,0,0,0.5);
+        opacity: 0;
+        animation: fadein 0.5s 0.3s forwards;
+      }
+      .terminal-bar {
+        background: #0a130a;
+        padding: 0.6rem 1rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+      .t-dot-r { background: #3d1010; }
+      .t-dot-y { background: #3d3210; }
+      .t-dot-g { background: var(--green-dark); }
+      .terminal-title {
+        font-size: 0.68rem;
+        color: var(--text-dim);
+        letter-spacing: 0.1em;
+        margin: 0 auto;
+      }
+      .terminal-body {
+        padding: 1.5rem;
+        font-size: 0.8rem;
+        line-height: 2;
+        text-align: left;
+      }
+      .t-prompt { color: var(--green-dim); }
+      .t-cmd { color: #fff; }
+      .t-out { color: var(--text-dim); padding-left: 1rem; display: block; }
+      .t-success { color: var(--green); }
+      .t-cursor {
+        display: inline-block;
+        width: 8px; height: 14px;
+        background: var(--green);
+        vertical-align: middle;
+        animation: blink 1s step-end infinite;
+      }
+      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+      /* lines reveal one by one */
+      .t-line { opacity: 0; }
+      .t-line:nth-child(1) { animation: fadein 0.3s 0.6s forwards; }
+      .t-line:nth-child(2) { animation: fadein 0.3s 1.0s forwards; }
+      .t-line:nth-child(3) { animation: fadein 0.3s 1.4s forwards; }
+      .t-line:nth-child(4) { animation: fadein 0.3s 1.8s forwards; }
+      .t-line:nth-child(5) { animation: fadein 0.3s 2.2s forwards; }
+      .t-line:nth-child(6) { animation: fadein 0.3s 2.6s forwards; }
+
+      /* progress bar */
+      .progress-wrap {
+        width: min(480px, 90vw);
+        opacity: 0;
+        animation: fadein 0.4s 0.5s forwards;
+      }
+      .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+      .progress-track {
+        height: 3px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--green);
+        box-shadow: 0 0 10px var(--green);
+        width: 0%;
+        animation: fill-bar 2.8s 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
+      }
+      @keyframes fill-bar { to { width: 100%; } }
+
+      /* fallback link */
+      .fallback {
+        font-size: 0.72rem;
+        color: var(--text-dim);
+        letter-spacing: 0.06em;
+        opacity: 0;
+        animation: fadein 0.4s 3s forwards;
+      }
+      .fallback a {
+        color: var(--green);
+        font-weight: bold;
+        text-decoration: none;
+      }
+      .fallback a:hover {
+        text-shadow: 0 0 8px var(--green);
+      }
+
+      @keyframes fadein { to { opacity: 1; } }
+    </style>
   </head>
   <body>
-    <p>If you are not redirected, <a href="https://discord.com/oauth2/authorize?client_id=1486065210275135518&permissions=7319981751008502&integration_type=0&scope=bot+applications.commands">click here</a>.</p>
+    <div class="bg-glow"></div>
+
+    <div class="container">
+      <div class="logo"><span>[</span>OPS<span>BOT]</span></div>
+
+      <div class="terminal-box">
+        <div class="terminal-bar">
+          <div class="t-dot t-dot-r"></div>
+          <div class="t-dot t-dot-y"></div>
+          <div class="t-dot t-dot-g"></div>
+          <div class="terminal-title">OPSBOT — DEPLOY SEQUENCE</div>
+        </div>
+        <div class="terminal-body">
+          <div class="t-line"><span class="t-prompt">$ </span><span class="t-cmd">opsbot invite --scope bot+commands</span></div>
+          <div class="t-line"><span class="t-out">authenticating with discord oauth2...</span></div>
+          <div class="t-line"><span class="t-out">requesting permission set <span class="t-success">7319981751008502</span></span></div>
+          <div class="t-line"><span class="t-out">building invite url...</span></div>
+          <div class="t-line"><span class="t-out t-success">✓ ready — redirecting to discord</span></div>
+          <div class="t-line"><span class="t-prompt">$ </span><span class="t-cursor"></span></div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Redirecting</span>
+          <span id="pct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+
+      <p class="fallback">Not redirected? <a href="https://discord.com/oauth2/authorize?client_id=1486065210275135518&permissions=7319981751008502&integration_type=0&scope=bot+applications.commands">Click here to continue.</a></p>
+    </div>
+
+    <script>
+      // redirect after animation completes
+      const dest = 'https://discord.com/oauth2/authorize?client_id=1486065210275135518&permissions=7319981751008502&integration_type=0&scope=bot+applications.commands';
+      setTimeout(() => { window.location.href = dest; }, 3200);
+
+      // tick up the percentage counter alongside the css bar
+      const pct = document.getElementById('pct');
+      let val = 0;
+      const start = Date.now();
+      const duration = 2800;
+      function tick() {
+        const elapsed = Date.now() - start - 700; // matches animation delay
+        if (elapsed < 0) { requestAnimationFrame(tick); return; }
+        const t = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        val = Math.round(eased * 100);
+        pct.textContent = val + '%';
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    </script>
   </body>
 </html>
