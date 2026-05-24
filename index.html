@@ -52,7 +52,7 @@
     cursor: crosshair;
   }
 
-  /* SCANLINE OVERLAY */
+  /* scanline overlay */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -67,7 +67,7 @@
     z-index: 1000;
   }
 
-  /* GRID TEXTURE */
+  /* grid texture */
   body::after {
     content: '';
     position: fixed; inset: 0;
@@ -79,7 +79,7 @@
     z-index: 999;
   }
 
-  /* NAV */
+  /* nav */
   .ops-nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -137,7 +137,7 @@
   }
   .nav-btn:hover { background: #00ff70; box-shadow: 0 0 20px rgba(0,255,65,0.5); transform: translateY(-1px); }
 
-  /* HERO */
+  /* hero */
   .hero {
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -243,7 +243,7 @@
   }
   .btn-secondary:hover { border-color: var(--green); background: var(--green-glow); transform: translateY(-2px); }
 
-  /* TERMINAL TICKER */
+  /* ticker */
   .ticker {
     width: 100%;
     background: var(--surface);
@@ -276,7 +276,7 @@
     100% { transform: translateX(-50%); }
   }
 
-  /* STATS BAR */
+  /* stats bar */
   .stats-bar {
     display: flex; gap: 0; justify-content: center;
     padding: 0 2rem;
@@ -316,7 +316,7 @@
     margin-top: 0.3rem;
   }
 
-  /* SECTION */
+  /* section */
   section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
   .section-tag {
     font-family: var(--mono);
@@ -345,7 +345,7 @@
     margin-bottom: 3.5rem;
   }
 
-  /* FEATURES GRID */
+  /* features grid */
   .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -414,7 +414,7 @@
     letter-spacing: 0.08em;
   }
 
-  /* TERMINAL DEMO */
+  /* terminal demo */
   .terminal-section {
     padding: 6rem 2rem;
     background: var(--surface);
@@ -466,7 +466,7 @@
   }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-  /* HOW IT WORKS */
+  /* how it works */
   .steps-grid {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
     border: 1px solid var(--border);
@@ -499,7 +499,7 @@
   }
   .step p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; }
 
-  /* CTA */
+  /* cta */
   .cta-section {
     padding: 8rem 2rem;
     text-align: center;
@@ -516,7 +516,7 @@
   .cta-section p { font-size: 1.1rem; color: var(--text-dim); margin-bottom: 2.5rem; max-width: 480px; display: block; margin-left: auto; margin-right: auto; }
   .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-  /* FOOTER */
+  /* footer */
   .ops-footer { width: 100%; padding: 3rem 2.5rem; border-top: 1px solid var(--border); background: #020902; display: flex; justify-content: space-between; align-items: center; margin-top: 4rem; }
   .footer-copyright { font-family: var(--mono); font-size: 0.75rem; color: var(--green-dark); letter-spacing: 0.05em; }
   .footer-support-btn {
@@ -533,7 +533,7 @@
 
   @keyframes fadein { to { opacity: 1; } }
 
-  /* RESPONSIVE */
+  /* responsive */
   @media (max-width: 768px) {
     .terminal-wrapper { grid-template-columns: 1fr; }
     .steps-grid { grid-template-columns: 1fr 1fr; }
@@ -558,7 +558,7 @@
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- hero -->
 <section class="hero" style="max-width:unset; padding-left:2rem; padding-right:2rem;">
   <div class="hero-bg-circle"></div>
   <div class="hero-tag">SEA-Integrated Division Automation</div>
@@ -571,14 +571,14 @@
   </div>
 </section>
 
-<!-- TICKER (full bleed, outside hero) -->
+<!-- ticker (full bleed, outside hero) -->
 <div class="ticker">
   <div class="ticker-inner" id="ticker">
-    <!-- filled by JS -->
+    <!-- filled by js -->
   </div>
 </div>
 
-<!-- STATS -->
+<!-- stats -->
 <div style="max-width:1000px; margin: 0 auto; padding: 0 2rem;">
   <div class="stats-bar">
     <div class="stat"><div class="stat-num" data-target="100">0</div><div class="stat-label">% Blacklist Coverage</div></div>
@@ -587,7 +587,7 @@
   </div>
 </div>
 
-<!-- FEATURES -->
+<!-- features -->
 <section id="features" style="padding-top: 7rem;">
   <div class="section-tag">capabilities</div>
   <h2>Everything Your Division<br><span class="accent">Runs On.</span></h2>
@@ -613,7 +613,6 @@
       <p>Weekly digest reports showing recruitment trends, event frequency, and EXP gain counts — all automatically compiled and posted to your specified channel.</p>
     </div>
 
-
     <div class="feature-card">
       <span class="feature-num">06</span>
       <h3>Fully Modular</h3>
@@ -623,8 +622,7 @@
   </div>
 </section>
 
-
-<!-- HOW IT WORKS -->
+<!-- how it works -->
 <section id="setup" style="text-align:center;">
   <div class="section-tag">deployment</div>
   <h2>Up in <span class="accent">4 Steps.</span></h2>
@@ -653,7 +651,7 @@
   </div>
 </section>
 
-<!-- CTA -->
+<!-- cta -->
 <div class="cta-section">
   <div class="section-tag" style="display:block; text-align:center; margin-bottom:0.8rem;">get started</div>
   <h2>Your Division.<br><span class="accent">Fully Automated.</span></h2>
@@ -670,21 +668,21 @@
 </footer>
 
 <script>
-  // Ticker
+  // ticker - duplicate items so the -50% snap is seamless
   const items = [
     'BLACKLIST SYNC ACTIVE','EVENT LOG ONLINE','EXP TRACKING ENABLED',
     'AUTO-BAN MODULE ARMED', 'BLACKLIST SYNC ACTIVE',
     'MODERATION LOGS LIVE','SEA INTEGRATION CONNECTED','AUTO-BAN MODULE ARMED',
   ];
   const ticker = document.getElementById('ticker');
-  items.forEach(text => {
+  [...items, ...items].forEach(text => {
     const el = document.createElement('div');
     el.className = 'ticker-item';
     el.innerHTML = `<span class="dot"></span>${text}`;
     ticker.appendChild(el);
   });
 
-  // Counters — plain interval, runs immediately
+  // counters - plain interval runs immediately
   function runCounter(el, from, to, duration, suffix) {
     var start = null;
     function tick(ts) {
@@ -704,7 +702,7 @@
   if (s2) { runCounter(s2, 0, 24, 1000, ''); s2.closest('.stat').querySelector('.stat-label').textContent = '/ 7 Uptime'; }
   if (s3) runCounter(s3, 25, 30, 900, 'ms');
 
-  // Scroll reveal — exclude .stat from opacity:0 so counters aren't broken
+  // scroll reveal - excludes .stat so counters arent broken
   const cards = document.querySelectorAll('.feature-card, .step');
   const revealObs = new IntersectionObserver(entries => {
     entries.forEach((e, i) => {
