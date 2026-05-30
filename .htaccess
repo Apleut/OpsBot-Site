@@ -23,6 +23,9 @@ RewriteRule ^(.*[^/])$ /$1/ [R=301,L]
 
 Options -Indexes
 
-<Files ".htaccess">
+<FilesMatch "^(\.htaccess|\.gitignore|CNAME)$">
     Require all denied
-</Files>
+</FilesMatch>
+
+RedirectMatch 403 /(^|\.)git/
+RedirectMatch 403 /Testing/
