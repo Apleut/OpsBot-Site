@@ -1,1 +1,4 @@
 Testing/*.png
+
+bot-heartbeat.json
+status*.json

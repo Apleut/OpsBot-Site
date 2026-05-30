@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>OPSBOT — System Status</title>
+    <meta name="title" content="OPSBOT — System Status">
+    <meta name="description" content="Live status for OPSBOT services.">
+    <meta name="theme-color" content="#00ff41">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap">
+    </noscript>
+    <style>
+      :root {
+        --green: #00ff41;
+        --green-dim: #00c032;
+        --green-dark: #006618;
+        --green-glow: rgba(0,255,65,0.18);
+        --black: #000000;
+        --bg: #030a03;
+        --nav-bg: rgba(3,10,3,0.85);
+        --surface: #070f07;
+        --border: rgba(0,255,65,0.22);
+        --text: #b8f5c0;
+        --text-dim: #4d8f55;
+        --mono: 'Share Tech Mono', monospace;
+        --display: 'Orbitron', sans-serif;
+        --body: 'Rajdhani', sans-serif;
+        --red: #ff3131;
+        --yellow: #ffe531;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--mono);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 100px 1rem 3rem;
+        cursor: crosshair;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: '';
+        position: fixed; inset: 0;
+        background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+        pointer-events: none;
+        z-index: 1000;
+      }
+
+      body::after {
+        content: '';
+        position: fixed; inset: 0;
+        background-image: linear-gradient(rgba(0,255,65,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,65,0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 999;
+      }
+
+      /* nav — copied from index */
+      .ops-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2.5rem;
+        height: 64px;
+        background: var(--nav-bg);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: top 0.3s ease-in-out;
+      }
+      .nav-hidden { top: -70px; }
+      .nav-logo {
+        font-family: var(--display);
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: var(--green);
+        letter-spacing: 0.12em;
+        text-shadow: 0 0 14px var(--green);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .nav-links { display: flex; align-items: center; gap: 2rem; }
+      .nav-link {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--text-dim);
+        text-decoration: none;
+        letter-spacing: 0.08em;
+        transition: color 0.2s;
+        text-transform: uppercase;
+      }
+      .nav-link:hover { color: var(--green); text-shadow: 0 0 8px var(--green); }
+      .nav-link.active { color: var(--green); }
+      .nav-btn {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--black);
+        background: var(--green);
+        padding: 0.45rem 1.1rem;
+        border: none;
+        cursor: pointer;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-decoration: none;
+        clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+        transition: all 0.2s;
+        font-weight: 700;
+      }
+      .nav-btn:hover { background: #00ff70; box-shadow: 0 0 20px rgba(0,255,65,0.5); transform: translateY(-1px); }
+
+      .bg-glow {
+        position: fixed; inset: 0;
+        background: radial-gradient(ellipse at center, rgba(0,255,65,0.06) 0%, transparent 65%);
+        pointer-events: none;
+        z-index: 0;
+        animation: pulse-glow 4s ease-in-out infinite;
+      }
+      @keyframes pulse-glow { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+      .container {
+        position: relative;
+        z-index: 10;
+        width: min(640px, 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        flex: 1;
+      }
+
+      .page-title {
+        font-family: var(--display);
+        font-size: 0.72rem;
+        color: var(--green-dim);
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        border: 1px solid var(--border);
+        padding: 0.35rem 1rem;
+        align-self: flex-start;
+        opacity: 0;
+        animation: fadein 0.4s 0.1s forwards;
+      }
+
+      .status-banner {
+        background: #020802;
+        border: 1px solid var(--border);
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        opacity: 0;
+        animation: fadein 0.4s 0.2s forwards;
+      }
+      .status-indicator { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+      .status-indicator.online { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse-dot 2s ease-in-out infinite; }
+      .status-indicator.offline { background: var(--red); box-shadow: 0 0 8px var(--red); }
+      .status-indicator.unknown { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+      @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+      .status-text { flex: 1; }
+      .status-title { font-family: var(--display); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; color: var(--green); }
+      .status-title.offline { color: var(--red); }
+      .status-title.unknown { color: var(--yellow); }
+      .status-subtitle { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; }
+      .last-checked { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.08em; text-align: right; }
+
+      .section-label {
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.5rem;
+        opacity: 0;
+        animation: fadein 0.4s 0.3s forwards;
+      }
+
+      .services { display: flex; flex-direction: column; gap: 1px; opacity: 0; animation: fadein 0.4s 0.4s forwards; }
+      .service-row {
+        background: #020802;
+        border: 1px solid var(--border);
+        padding: 0.9rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: -1px;
+      }
+      .service-row:first-child { margin-top: 0; }
+      .service-name { flex: 1; font-size: 0.8rem; color: var(--text); letter-spacing: 0.06em; }
+      .service-desc { font-size: 0.68rem; color: var(--text-dim); margin-top: 0.15rem; }
+      .service-badge { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border: 1px solid; }
+      .service-badge.operational { color: var(--green); border-color: var(--green-dark); background: rgba(0,255,65,0.06); }
+      .service-badge.offline { color: var(--red); border-color: rgba(255,49,49,0.3); background: rgba(255,49,49,0.06); }
+      .service-badge.degraded { color: var(--yellow); border-color: rgba(255,229,49,0.3); background: rgba(255,229,49,0.06); }
+      .service-badge.loading { color: var(--text-dim); border-color: var(--border); }
+
+      .uptime-section { opacity: 0; animation: fadein 0.4s 0.5s forwards; }
+      .uptime-wrap { background: #020802; border: 1px solid var(--border); padding: 1.25rem 1.5rem; }
+      .uptime-header { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+      .uptime-bars { display: flex; gap: 3px; align-items: flex-end; height: 40px; }
+      .uptime-bar { flex: 1; border-radius: 1px; min-height: 8px; cursor: default; position: relative; }
+      .uptime-bar.up { background: var(--green-dark); }
+      .uptime-bar.down { background: rgba(255,49,49,0.5); }
+      .uptime-bar.nodata { background: rgba(255,255,255,0.06); }
+      .uptime-bar:hover { opacity: 0.8; }
+      .uptime-bar[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        bottom: 110%; left: 50%;
+        transform: translateX(-50%);
+        background: #0a130a;
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 200;
+      }
+      .uptime-pct { font-family: var(--display); font-size: 1.1rem; font-weight: 700; color: var(--green); margin-top: 0.75rem; letter-spacing: 0.08em; }
+      .uptime-label { font-size: 0.65rem; color: var(--text-dim); margin-top: 0.2rem; }
+
+      .log-section { opacity: 0; animation: fadein 0.4s 0.6s forwards; }
+      .terminal-box { background: #020802; border: 1px solid var(--border); }
+      .terminal-bar { background: #0a130a; padding: 0.5rem 1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
+      .t-dot { width: 8px; height: 8px; border-radius: 50%; }
+      .t-dot-r { background: #3d1010; }
+      .t-dot-y { background: #3d3210; }
+      .t-dot-g { background: var(--green-dark); }
+      .terminal-title { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; margin: 0 auto; }
+      .terminal-body { padding: 1rem 1.25rem; font-size: 0.75rem; line-height: 1.9; }
+      .log-line { display: flex; gap: 1rem; }
+      .log-time { color: var(--text-dim); flex-shrink: 0; }
+      .log-msg { color: var(--text); }
+      .log-msg.ok { color: var(--green); }
+      .log-msg.err { color: var(--red); }
+      .log-msg.warn { color: var(--yellow); }
+
+      /* footer — copied from index */
+      .ops-footer {
+        width: 100%;
+        padding: 3rem 2.5rem;
+        border-top: 1px solid var(--border);
+        background: #020902;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4rem;
+        position: relative;
+        z-index: 10;
+      }
+      .footer-copyright { font-family: var(--mono); font-size: 0.75rem; color: var(--green-dark); letter-spacing: 0.05em; }
+      .footer-support-btn {
+        font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: #000; background: var(--green);
+        padding: 0.6rem 1.4rem; text-decoration: none; text-transform: uppercase;
+        clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); transition: 0.2s;
+      }
+      .footer-support-btn:hover { background: #00ff70; box-shadow: 0 0 15px rgba(0,255,65,0.4); transform: translateY(-2px); }
+
+      .cursor { display: inline-block; width: 7px; height: 12px; background: var(--green); vertical-align: middle; animation: blink 1s step-end infinite; }
+      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+      @keyframes fadein { to { opacity: 1; } }
+
+      @media (max-width: 640px) {
+        .ops-nav { padding: 0 1.5rem; }
+        .nav-link { display: none; }
+        .ops-footer { flex-direction: column; text-align: center; gap: 2rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-glow"></div>
+
+    <nav class="ops-nav" id="navbar">
+      <a href="https://opsbot.link/" class="nav-logo"><span style="color: var(--green-dim)">[</span>OPSBOT<span style="color: var(--green-dim)">]</span></a>
+      <div class="nav-links">
+        <a href="https://opsbot.link/" class="nav-link">Home</a>
+        <a href="https://opsbot.link/invite" class="nav-link">Invite</a>
+        <a href="https://opsbot.link/terms" class="nav-link">Terms</a>
+        <a href="https://opsbot.link/status" class="nav-link active">Status</a>
+        <a href="https://opsbot.link/support" class="nav-btn">Support</a>
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="page-title">// system status</div>
+
+      <div class="status-banner" id="banner">
+        <div class="status-indicator unknown" id="banner-dot"></div>
+        <div class="status-text">
+          <div class="status-title unknown" id="banner-title">CHECKING SYSTEMS...</div>
+          <div class="status-subtitle" id="banner-sub">Fetching status data</div>
+        </div>
+        <div class="last-checked" id="last-checked">—</div>
+      </div>
+
+      <div class="section-label">// services</div>
+
+      <div class="services">
+        <div class="service-row">
+          <div>
+            <div class="service-name">Discord Bot</div>
+            <div class="service-desc">Core bot process — commands, events, gateway</div>
+          </div>
+          <div class="service-badge loading" id="badge-bot">CHECKING</div>
+        </div>
+        <div class="service-row">
+          <div>
+            <div class="service-name">Google Sheets Sync</div>
+            <div class="service-desc">SEA blacklist + division data</div>
+          </div>
+          <div class="service-badge loading" id="badge-sheets">CHECKING</div>
+        </div>
+        <div class="service-row">
+          <div>
+            <div class="service-name">Web Services</div>
+            <div class="service-desc">opsbot.link — dashboard + site</div>
+          </div>
+          <div class="service-badge loading" id="badge-web">CHECKING</div>
+        </div>
+      </div>
+
+      <div class="uptime-section">
+        <div class="section-label" style="opacity:1; margin-bottom: 1rem;">// 90-day uptime</div>
+        <div class="uptime-wrap">
+          <div class="uptime-header">
+            <span>90 days ago</span>
+            <span>today</span>
+          </div>
+          <div class="uptime-bars" id="uptime-bars"></div>
+          <div class="uptime-pct" id="uptime-pct">—</div>
+          <div class="uptime-label">bot uptime over last 90 days</div>
+        </div>
+      </div>
+
+      <div class="log-section">
+        <div class="section-label" style="opacity:1; margin-bottom: 1rem;">// recent events</div>
+        <div class="terminal-box">
+          <div class="terminal-bar">
+            <div class="t-dot t-dot-r"></div>
+            <div class="t-dot t-dot-y"></div>
+            <div class="t-dot t-dot-g"></div>
+            <div class="terminal-title">OPSBOT — EVENT LOG</div>
+          </div>
+          <div class="terminal-body" id="log-body">
+            <div class="log-line">
+              <span class="log-time">--:--:--</span>
+              <span class="log-msg">fetching log...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="ops-footer">
+      <div class="footer-copyright">&copy; OPSBOT 2026. ALL RIGHTS RESERVED.</div>
+      <a href="https://opsbot.link/support" class="footer-support-btn">Get Support</a>
+    </footer>
+
+    <script>
+      async function fetchJSON(path) {
+        try {
+          const res = await fetch(path + '?t=' + Date.now());
+          if (!res.ok) throw new Error('failed');
+          return await res.json();
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function fmt(isoStr) {
+        return new Date(isoStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+
+      function setBadge(id, online) {
+        const el = document.getElementById(id);
+        if (online === null || online === undefined) {
+          el.className = 'service-badge loading';
+          el.textContent = 'UNKNOWN';
+        } else if (online) {
+          el.className = 'service-badge operational';
+          el.textContent = 'OPERATIONAL';
+        } else {
+          el.className = 'service-badge offline';
+          el.textContent = 'OFFLINE';
+        }
+      }
+
+      function buildUptimeBars(history) {
+        const wrap = document.getElementById('uptime-bars');
+        wrap.innerHTML = '';
+        const today = new Date();
+        const days = [];
+        for (let i = 89; i >= 0; i--) {
+          const d = new Date(today);
+          d.setDate(d.getDate() - i);
+          days.push(d.toISOString().slice(0, 10));
+        }
+        let upDays = 0;
+        let knownDays = 0;
+        days.forEach(dateStr => {
+          const bar = document.createElement('div');
+          const entry = history ? history[dateStr] : null;
+          if (!entry) {
+            bar.className = 'uptime-bar nodata';
+            bar.style.height = '8px';
+            bar.title = dateStr + ': no data';
+          } else if (entry.bot) {
+            bar.className = 'uptime-bar up';
+            bar.style.height = (16 + Math.random() * 24) + 'px';
+            bar.title = dateStr + ': online';
+            upDays++;
+            knownDays++;
+          } else {
+            bar.className = 'uptime-bar down';
+            bar.style.height = '10px';
+            bar.title = dateStr + ': offline';
+            knownDays++;
+          }
+          wrap.appendChild(bar);
+        });
+        document.getElementById('uptime-pct').textContent = knownDays === 0
+          ? 'no data yet'
+          : ((upDays / knownDays) * 100).toFixed(2) + '%';
+      }
+
+      function renderLog(events) {
+        const body = document.getElementById('log-body');
+        if (!events || events.length === 0) {
+          body.innerHTML = '<div class="log-line"><span class="log-time">--:--:--</span><span class="log-msg warn">no events recorded yet</span></div>';
+          return;
+        }
+        body.innerHTML = events.slice(0, 10).map(e =>
+          `<div class="log-line">
+            <span class="log-time">${e.time || '--:--:--'}</span>
+            <span class="log-msg ${e.type || ''}">${e.msg || ''}</span>
+          </div>`
+        ).join('') + '<div class="log-line"><span class="log-time">&nbsp;</span><span class="log-msg"><span class="cursor"></span></span></div>';
+      }
+
+      async function update() {
+        const [status, history, events] = await Promise.all([
+          fetchJSON('/status.json'),
+          fetchJSON('/status-history.json'),
+          fetchJSON('/status-events.json')
+        ]);
+
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const dot = document.getElementById('banner-dot');
+        const title = document.getElementById('banner-title');
+        const sub = document.getElementById('banner-sub');
+
+        if (!status) {
+          dot.className = 'status-indicator offline';
+          title.className = 'status-title offline';
+          title.textContent = 'STATUS UNAVAILABLE';
+          sub.textContent = 'Could not reach status endpoint — check heartbeat.py';
+          document.getElementById('last-checked').textContent = 'attempted: ' + timeStr;
+          setBadge('badge-bot', null);
+          setBadge('badge-sheets', null);
+          setBadge('badge-web', null);
+        } else {
+          const checkedAt = status.checked_at ? fmt(status.checked_at) : timeStr;
+          const svc = status.services || {};
+          const allOnline = svc.bot && svc.sheets && svc.web;
+
+          if (allOnline) {
+            dot.className = 'status-indicator online';
+            title.className = 'status-title';
+            title.textContent = 'ALL SYSTEMS OPERATIONAL';
+            sub.textContent = 'All services running normally';
+          } else {
+            dot.className = 'status-indicator offline';
+            title.className = 'status-title offline';
+            title.textContent = 'PARTIAL OUTAGE DETECTED';
+            sub.textContent = 'One or more services are down';
+          }
+
+          setBadge('badge-bot', svc.bot);
+          setBadge('badge-sheets', svc.sheets);
+          setBadge('badge-web', svc.web);
+          document.getElementById('last-checked').textContent = 'last check: ' + checkedAt;
+        }
+
+        buildUptimeBars(history);
+        renderLog(events);
+      }
+
+      update();
+      setInterval(update, 60000);
+    </script>
+  </body>
+</html>
