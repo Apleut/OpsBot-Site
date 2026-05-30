@@ -28,4 +28,3 @@ Options -Indexes
 </FilesMatch>
 
 RedirectMatch 403 /(^|\.)git/
-RewriteRule ^Testing(/.*)?$ - [F,L]
