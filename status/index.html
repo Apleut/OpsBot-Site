@@ -311,7 +311,7 @@
 
     <div class="container">
 
-      <div class="page-title">// system status</div>
+      <div class="page-title">// SYSTEM STATUS</div>
 
       <div class="status-banner" id="banner">
         <div class="status-indicator unknown" id="banner-dot"></div>
@@ -322,13 +322,13 @@
         <div class="last-checked" id="last-checked">—</div>
       </div>
 
-      <div class="section-label">// services</div>
+      <div class="section-label">// SERVICES</div>
 
       <div class="services">
         <div class="service-row">
           <div>
             <div class="service-name">Discord Bot</div>
-            <div class="service-desc">Core bot process — commands, events, gateway</div>
+            <div class="service-desc">Core bot process — commands, events, & Discord gateway</div>
           </div>
           <div class="service-badge loading" id="badge-bot">CHECKING</div>
         </div>
@@ -342,7 +342,7 @@
         <div class="service-row">
           <div>
             <div class="service-name">Web Services</div>
-            <div class="service-desc">opsbot.link — dashboard + site</div>
+            <div class="service-desc">OPSBOT website</div>
           </div>
           <div class="service-badge loading" id="badge-web">CHECKING</div>
         </div>
@@ -353,11 +353,11 @@
         <div class="uptime-wrap">
           <div class="uptime-header">
             <span>90 days ago</span>
-            <span>today</span>
+            <span>Today</span>
           </div>
           <div class="uptime-bars" id="uptime-bars"></div>
           <div class="uptime-pct" id="uptime-pct">—</div>
-          <div class="uptime-label">bot uptime over last 90 days</div>
+          <div class="uptime-label">Bot uptime over last 90 days [NOTE: This may be inaccurate depending on the length of the outage.</div>
         </div>
       </div>
 
@@ -433,23 +433,23 @@
           if (!entry) {
             bar.className = 'uptime-bar nodata';
             bar.style.height = '8px';
-            bar.title = dateStr + ': no data';
+            bar.title = dateStr + ': NO DATA';
           } else if (entry.bot) {
             bar.className = 'uptime-bar up';
             bar.style.height = (16 + Math.random() * 24) + 'px';
-            bar.title = dateStr + ': online';
+            bar.title = dateStr + ': ONLINE';
             upDays++;
             knownDays++;
           } else {
             bar.className = 'uptime-bar down';
             bar.style.height = '10px';
-            bar.title = dateStr + ': offline';
+            bar.title = dateStr + ': OFFLINE';
             knownDays++;
           }
           wrap.appendChild(bar);
         });
         document.getElementById('uptime-pct').textContent = knownDays === 0
-          ? 'no data yet'
+          ? 'NO DATA YET'
           : ((upDays / knownDays) * 100).toFixed(2) + '%';
       }
 
@@ -509,7 +509,7 @@
           setBadge('badge-bot', svc.bot);
           setBadge('badge-sheets', svc.sheets);
           setBadge('badge-web', svc.web);
-          document.getElementById('last-checked').textContent = 'last check: ' + checkedAt;
+          document.getElementById('last-checked').textContent = 'LAST CHECK: ' + checkedAt;
         }
 
         buildUptimeBars(history);
