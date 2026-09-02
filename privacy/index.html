@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPSBOT — Privacy Policy</title>
+<meta name="title" content="OPSBOT — Privacy Policy">
+<meta name="description" content="How OPSBOT collects, uses, stores, and protects data for SEA Military divisions on Discord and Roblox.">
+<meta name="theme-color" content="#00ff41">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opsbot.link/privacy">
+<meta property="og:title" content="OPSBOT — Privacy Policy">
+<meta property="og:description" content="How OPSBOT collects, uses, stores, and protects data for SEA Military divisions on Discord and Roblox.">
+<meta property="og:image" content="https://opsbot.link/embed-image.png">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:url" content="https://opsbot.link/privacy">
+<meta name="twitter:title" content="OPSBOT — Privacy Policy">
+<meta name="twitter:description" content="How OPSBOT collects, uses, stores, and protects data for SEA Military divisions on Discord and Roblox.">
+<meta name="twitter:image" content="https://opsbot.link/embed-image.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --green-dim: #00c032;
+    --green-dark: #006618;
+    --green-glow: rgba(0,255,65,0.18);
+    --black: #000000;
+    --bg: #020902;
+    --surface: #070f07;
+    --nav-bg: rgba(3,10,3,0.92);
+    --border: rgba(0,255,65,0.22);
+    --text: #b8f5c0;
+    --text-dim: #4d8f55;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+    --body: 'Rajdhani', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    overflow-x: hidden;
+    cursor: crosshair;
+    padding-top: 64px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(0,255,65,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,65,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  /* NAV */
+  .ops-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 64px;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: top 0.3s ease-in-out;
+  }
+  .nav-hidden { top: -70px; }
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--green);
+    letter-spacing: 0.12em;
+    text-shadow: 0 0 14px var(--green);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .nav-links { display: flex; align-items: center; gap: 2rem; }
+  .nav-link {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+    text-transform: uppercase;
+  }
+  .nav-link:hover { color: var(--green); text-shadow: 0 0 8px var(--green); }
+  .nav-link.active { color: var(--green); }
+  .nav-btn {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--black);
+    background: var(--green);
+    padding: 0.45rem 1.1rem;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+  .nav-btn:hover { background: #00ff70; box-shadow: 0 0 20px rgba(0,255,65,0.5); transform: translateY(-1px); }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 60px 2rem 40px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center top, rgba(0,255,65,0.05) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .page-tag {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--green-dark);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .page-header h1 {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .page-header h1 span { color: var(--green); }
+  .page-header p {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* CONTENT */
+  .tos-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .tos-section {
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+    background: rgba(0,255,65,0.01);
+    scroll-margin-top: 90px;
+  }
+
+  .tos-section-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(0,255,65,0.02);
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--green-dark);
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+  }
+
+  .tos-section-header h2 {
+    font-family: var(--display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .tos-section-body {
+    padding: 1.5rem;
+  }
+
+  .tos-section-body h4 {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 1.25rem 0 0.5rem;
+  }
+  .tos-section-body h4:first-child { margin-top: 0; }
+
+  .tos-section-body p {
+    font-size: 1rem;
+    color: var(--text-dim);
+    line-height: 1.75;
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+
+  .tos-section-body p:last-child { margin-bottom: 0; }
+
+  .tos-section-body ul {
+    list-style: none;
+    margin: 0.5rem 0 1rem;
+  }
+
+  .tos-section-body ul li {
+    font-size: 1rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+    font-weight: 300;
+    padding-left: 1.2rem;
+    position: relative;
+    margin-bottom: 0.3rem;
+  }
+
+  .tos-section-body ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--green-dark);
+    font-size: 0.75rem;
+  }
+
+  .tos-section-body a {
+    color: var(--green-dim);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0,255,65,0.3);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tos-section-body a:hover { color: var(--green); border-color: var(--green); }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+  }
+  .data-table th, .data-table td {
+    border: 1px solid var(--border);
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .data-table th {
+    color: var(--green);
+    background: rgba(0,255,65,0.04);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.68rem;
+  }
+  .data-table td { color: var(--text-dim); }
+
+  .highlight-box {
+    background: rgba(0,255,65,0.04);
+    border-left: 3px solid var(--green-dark);
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .warn-box {
+    background: rgba(255, 65, 0, 0.04);
+    border-left: 3px solid #995200;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: #d9a26a;
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .ops-footer {
+    width: 100%;
+    padding: 2rem 2.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    position: relative;
+    z-index: 110;
+  }
+  .footer-copyright {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--green-dark);
+    letter-spacing: 0.05em;
+  }
+  .footer-support-btn {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #000;
+    background: var(--green);
+    padding: 0.6rem 1.4rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: 0.2s;
+  }
+  .footer-support-btn:hover { background: #00ff70; box-shadow: 0 0 15px rgba(0,255,65,0.4); transform: translateY(-2px); }
+
+  @media (max-width: 640px) {
+    .ops-nav { padding: 0 1.5rem; }
+    .nav-link { display: none; }
+    .ops-footer { flex-direction: column; text-align: center; }
+    .data-table { font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="ops-nav" id="navbar">
+  <a href="https://opsbot.link/" class="nav-logo">
+    <span style="color: var(--green-dim)">[</span>OPSBOT<span style="color: var(--green-dim)">]</span>
+  </a>
+  <div class="nav-links">
+    <a href="https://opsbot.link/" class="nav-link">Home</a>
+    <a href="https://opsbot.link/invite" class="nav-link">Invite</a>
+    <a href="https://opsbot.link/terms" class="nav-link active">Terms</a>
+    <a href="https://opsbot.link/status" class="nav-link">Status</a>
+    <a href="https://opsbot.link/support" class="nav-btn">Support</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Privacy <span>Policy</span></h1>
+  <p>Last updated: August 2026 &nbsp;|&nbsp; Effective upon use of OPSBOT</p>
+</div>
+
+<div class="tos-content">
+
+  <div class="tos-section" id="s01">
+    <div class="tos-section-header">
+      <span class="section-num">01</span>
+      <h2>Overview</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>This Privacy Policy explains what information OPSBOT ("we," "us," "our") collects when you use the OPSBOT Discord bot, why we collect it, how it is stored and protected, and what choices you have regarding that information.</p>
+      <p>This policy is separate from our <a href="https://opsbot.link/terms">Terms of Service</a>, which governs acceptable use of OPSBOT. Both documents apply to your use of the bot, and this policy should be read alongside it.</p>
+      <p>By adding OPSBOT to a Discord server, or by using OPSBOT's commands as a member of a server where it is installed, you acknowledge that the data practices described here will apply to you.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s02">
+    <div class="tos-section-header">
+      <span class="section-num">02</span>
+      <h2>Information We Collect</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>OPSBOT collects the minimum data necessary to operate its moderation, blacklist, tracking, and analytics features. This falls into the following categories:</p>
+
+      <h4>Discord identifiers</h4>
+      <table class="data-table">
+        <tr><th>Data point</th><th>Purpose</th></tr>
+        <tr><td>Guild (server) ID</td><td>Store per-server configuration and module settings</td></tr>
+        <tr><td>Channel IDs</td><td>Route logs, alerts, and reports to configured channels</td></tr>
+        <tr><td>User IDs (members, staff, moderators)</td><td>Attribute warnings, notes, bans, quota tracking, and event attendance</td></tr>
+        <tr><td>Role IDs</td><td>Permission checks for command access and module gating</td></tr>
+      </table>
+
+      <h4>Roblox-related data</h4>
+      <table class="data-table">
+        <tr><th>Data point</th><th>Purpose</th></tr>
+        <tr><td>Roblox Group ID(s)</td><td>Group rank management and group info retrieval via Roblox OpenCloud</td></tr>
+        <tr><td>Roblox usernames / user IDs</td><td>Blacklist matching, EXP tracking, division rostering, and verifying that a Discord member corresponds to a real, specific Roblox account</td></tr>
+        <tr><td>Discord-to-Roblox account verification records</td><td>Confirming a member's claimed Roblox identity (e.g. via profile description code or bio-match verification) before granting verified roles or group-linked permissions</td></tr>
+        <tr><td>Roblox account age / join date</td><td>Flagging newly-created ("alt") accounts during verification for anti-evasion and blacklist enforcement</td></tr>
+        <tr><td>Roblox group rank / membership status</td><td>Confirming eligibility for verified roles and division-specific permissions</td></tr>
+      </table>
+
+      <h4>Division & moderation records</h4>
+      <ul>
+        <li>Division names, official status, and configuration metadata</li>
+        <li>Warnings, notes, mutes, kicks, and ban records issued through OPSBOT, including the acting moderator's ID and a timestamp</li>
+        <li>Event records: host ID, event type, attendance counts, and timestamps</li>
+        <li>Aggregate metrics: message counts, member counts, EXP totals, and weekly analytics snapshots</li>
+      </ul>
+
+      <h4>Information we do not intentionally collect</h4>
+      <ul>
+        <li>Passwords, payment information, or Discord/Roblox account credentials</li>
+        <li>Private messages sent outside servers where OPSBOT is installed</li>
+        <li>Persistent message content (see Section 05)</li>
+        <li>Precise geolocation, device identifiers, or IP addresses beyond what Discord's API itself exposes for standard bot operation</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s03">
+    <div class="tos-section-header">
+      <span class="section-num">03</span>
+      <h2>How We Use Information</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>We use the information described above only to operate, maintain, and improve OPSBOT's features:</p>
+      <ul>
+        <li>Enforcing the SEA blacklist by cross-referencing Roblox identifiers against configured blacklist sheets</li>
+        <li>Verifying that a Discord account belongs to a specific, legitimate Roblox account before granting verified roles, division access, or group-linked permissions</li>
+        <li>Detecting newly-created or suspicious Roblox accounts ("alts") during verification to prevent blacklist evasion</li>
+        <li>Tracking division EXP, member counts, and event attendance for reporting purposes</li>
+        <li>Applying moderation actions (bans, kicks, mutes, warnings) requested by authorized server staff</li>
+        <li>Generating weekly division analytics reports</li>
+        <li>Diagnosing bugs, monitoring uptime, and improving bot performance</li>
+        <li>Responding to support requests and data deletion requests</li>
+      </ul>
+      <p>We do not use collected data for advertising, do not build cross-server behavioral profiles for marketing purposes, and do not sell data to any third party under any circumstances.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s04">
+    <div class="tos-section-header">
+      <span class="section-num">04</span>
+      <h2>Legal Basis for Processing</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>Where applicable data protection law (such as the EU/UK GDPR) requires a legal basis for processing, we rely on the following:</p>
+      <ul>
+        <li><strong style="color: var(--text);">Legitimate interest</strong> — operating core moderation, blacklist, and tracking functionality that server administrators have explicitly enabled</li>
+        <li><strong style="color: var(--text);">Consent</strong> — given by a server administrator when installing OPSBOT and by members who continue to participate in a server using it</li>
+        <li><strong style="color: var(--text);">Legal obligation</strong> — where we are required to retain or disclose information to comply with applicable law</li>
+      </ul>
+      <p>If you are a member of a server (rather than the administrator who installed OPSBOT), the server owner is generally the data controller for records like warnings and bans, and OPSBOT operates as a data processor on their behalf.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s05">
+    <div class="tos-section-header">
+      <span class="section-num">05</span>
+      <h2>Message Content Handling</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>OPSBOT's message logging module accesses message content transiently and only in servers where the feature has been explicitly enabled by an administrator.</p>
+      <div class="highlight-box">
+        Message content is read in-memory, forwarded to your server's configured log channel, and then discarded. OPSBOT does not write raw message content to a database, and does not retain a searchable archive of message history.
+      </div>
+      <p>Metadata derived from messages — such as counts used for analytics — may be retained in aggregate form, but the underlying message text is not stored.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s06">
+    <div class="tos-section-header">
+      <span class="section-num">06</span>
+      <h2>Data Sharing & Third Parties</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>OPSBOT integrates with a limited set of third-party services in order to function. Data is only shared with these services to the extent necessary for the corresponding feature to work:</p>
+      <ul>
+        <li><strong style="color: var(--text);">Discord</strong> — all bot functionality operates on Discord's platform; see <a href="https://discord.com/privacy" target="_blank">Discord's Privacy Policy</a></li>
+        <li><strong style="color: var(--text);">Roblox OpenCloud API</strong> — used for group rank management, group info retrieval, and account verification checks; see <a href="https://en.help.roblox.com/hc/en-us/articles/115004630823" target="_blank">Roblox's Privacy Policy</a></li>
+        <li><strong style="color: var(--text);">Google Sheets API</strong> — used in read-only mode to pull blacklist and division tracker data from sheets your administrators configure and control</li>
+      </ul>
+      <p>We do not share your data with advertisers, data brokers, or analytics companies outside of what is described above. We may disclose limited information if legally compelled to do so by valid legal process, or to protect the safety of users, provided such disclosure does not conflict with applicable law.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s07">
+    <div class="tos-section-header">
+      <span class="section-num">07</span>
+      <h2>Data Retention</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>We retain data for as long as OPSBOT remains active in a server, and for a limited period afterward in case the server chooses to re-add the bot:</p>
+      <ul>
+        <li>Server configuration and module settings are retained while OPSBOT is installed, and for up to 90 days after removal</li>
+        <li>Moderation records (warnings, notes, bans) are retained for as long as the server keeps them, to preserve moderation history and accountability</li>
+        <li>Event, EXP, and analytics data are retained to support historical reporting, unless deletion is requested</li>
+        <li>Message content is not retained at all (see Section 05)</li>
+      </ul>
+      <p>Administrators or affected users may request earlier deletion at any time by contacting us — see Section 09.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s08">
+    <div class="tos-section-header">
+      <span class="section-num">08</span>
+      <h2>Data Security</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>We apply reasonable technical and organizational measures to protect data collected through OPSBOT, including access controls limiting which systems and personnel can reach production data, and secure handling of API credentials used to connect to Discord, Roblox, and Google Sheets.</p>
+      <p>No method of electronic storage or transmission is completely secure. While we work to protect your information, we cannot guarantee absolute security, and you provide information through OPSBOT at your own risk.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s09">
+    <div class="tos-section-header">
+      <span class="section-num">09</span>
+      <h2>Your Rights & Choices</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>Depending on your location, you may have rights regarding data associated with you, including the right to:</p>
+      <ul>
+        <li>Request a copy of the data we hold about you</li>
+        <li>Request correction of inaccurate data</li>
+        <li>Request deletion of your data, subject to legitimate moderation or record-keeping needs of the server you're in</li>
+        <li>Object to or restrict certain processing</li>
+        <li>Withdraw consent, where processing is based on consent, by leaving servers that use OPSBOT or asking an administrator to remove the bot</li>
+      </ul>
+      <p>To exercise any of these rights, contact <a href="mailto:support@opsbot.link">support@opsbot.link</a>. Server-wide configuration and moderation-record deletion requests should generally come from a server administrator, since that data is tied to the server's own moderation history; individual members can still request deletion of data specifically about them (e.g., their own warning notes) where this does not conflict with a server's legitimate moderation needs.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s10">
+    <div class="tos-section-header">
+      <span class="section-num">10</span>
+      <h2>Children's Privacy</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>OPSBOT is intended for use within Discord servers and is subject to <a href="https://discord.com/terms" target="_blank">Discord's Terms of Service</a>, which require users to meet Discord's own minimum age requirement. OPSBOT does not knowingly collect personal information directly from children under the age required by Discord or by applicable local law.</p>
+      <div class="warn-box">
+        If you believe a child has provided personal information to us in violation of this policy, contact us at support@opsbot.link and we will take reasonable steps to investigate and delete such information.
+      </div>
+      <p>Because OPSBOT is used within communities organized around a Roblox game, some server members may be minors under applicable law even where they meet Discord's baseline age requirement. We limit the data we collect to what's operationally necessary (Discord/Roblox identifiers and moderation records) and do not use this data for profiling, advertising, or any purpose beyond the moderation and tracking features described in this policy.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s11">
+    <div class="tos-section-header">
+      <span class="section-num">11</span>
+      <h2>International Data Transfers</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>OPSBOT may process and store data on servers located in different countries than the one you reside in. By using OPSBOT, you understand that your information may be transferred to, stored, and processed in a country that may have different data protection laws than your own.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s12">
+    <div class="tos-section-header">
+      <span class="section-num">12</span>
+      <h2>Discord & Roblox Platform Notice</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>OPSBOT operates on top of Discord and interacts with Roblox's platform, but is not affiliated with, endorsed by, or officially associated with Discord, Roblox, or Google. Your use of those platforms is separately governed by their own privacy policies and terms:</p>
+      <ul>
+        <li><a href="https://discord.com/privacy" target="_blank">Discord Privacy Policy</a></li>
+        <li><a href="https://en.help.roblox.com/hc/en-us/articles/115004630823" target="_blank">Roblox Privacy Policy</a></li>
+        <li><a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy</a></li>
+      </ul>
+      <p>This policy only covers data handling performed by OPSBOT itself, not by these underlying platforms.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s13">
+    <div class="tos-section-header">
+      <span class="section-num">13</span>
+      <h2>Changes to This Policy</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>We may update this Privacy Policy from time to time. Changes will be reflected by an updated date at the top of this page. For significant changes affecting how data is collected or used, we will make a reasonable effort to notify server administrators via OPSBOT's official Discord server or support channels.</p>
+      <p>Continued use of OPSBOT after changes are posted constitutes acceptance of the revised policy.</p>
+    </div>
+  </div>
+
+  <div class="tos-section" id="s14">
+    <div class="tos-section-header">
+      <span class="section-num">14</span>
+      <h2>Contact Us</h2>
+    </div>
+    <div class="tos-section-body">
+      <p>For questions, concerns, or requests related to this Privacy Policy or your data, contact us at:</p>
+      <ul>
+        <li>Email: <a href="mailto:support@opsbot.link">support@opsbot.link</a></li>
+        <li>Discord: <a href="https://discord.gg/QuVUZzfXdf" target="_blank">discord.gg/QuVUZzfXdf</a></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer class="ops-footer">
+  <div class="footer-copyright">&copy; OPSBOT 2026. ALL RIGHTS RESERVED.</div>
+  <a href="https://opsbot.link/support" class="footer-support-btn">Get Support</a>
+</footer>
+
+<script>
+  let lastScrollTop = 0;
+  const navbar = document.getElementById("navbar");
+  window.addEventListener("scroll", function() {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > lastScrollTop && scrollTop > 64) {
+      navbar.classList.add("nav-hidden");
+    } else {
+      navbar.classList.remove("nav-hidden");
+    }
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  }, false);
+</script>
+
+</body>
+</html>
