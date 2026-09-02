@@ -227,6 +227,7 @@
       .uptime-bars { display: flex; gap: 3px; align-items: flex-end; height: 40px; }
       .uptime-bar { flex: 1; border-radius: 1px; min-height: 8px; cursor: default; position: relative; }
       .uptime-bar.up { background: var(--green-dark); }
+      .uptime-bar.degraded { background: rgba(255,229,49,0.4); }
       .uptime-bar.down { background: rgba(255,49,49,0.5); }
       .uptime-bar.nodata { background: rgba(255,255,255,0.06); }
       .uptime-bar:hover { opacity: 0.8; }
@@ -302,11 +303,11 @@
       <a href="https://opsbot.link/" class="nav-logo"><span style="color: var(--green-dim)">[</span>OPSBOT<span style="color: var(--green-dim)">]</span></a>
       <div class="nav-links">
         <a href="https://opsbot.link/" class="nav-link">Home</a>
-        <a href="https://opsbot.link/invite" class="nav-link">Invite</a>
         <a href="https://opsbot.link/terms" class="nav-link">Terms</a>
         <a href="https://opsbot.link/status" class="nav-link active">Status</a>
+        <a href="https://opsbot.link/dashboard" class="nav-link">Dashboard</a>
         <a href="https://opsbot.link/support" class="nav-btn">Support</a>
-      </div>
+  </div>
     </nav>
 
     <div class="container">
@@ -357,7 +358,7 @@
           </div>
           <div class="uptime-bars" id="uptime-bars"></div>
           <div class="uptime-pct" id="uptime-pct">—</div>
-          <div class="uptime-label">Bot uptime over last 90 days [NOTE: This may be inaccurate depending on the length of the outage.]</div>
+          <div class="uptime-label">Bot uptime over last 90 days [NOTE: This may be inaccurate]</div>
         </div>
       </div>
 
@@ -425,32 +426,59 @@
           d.setDate(d.getDate() - i);
           days.push(d.toISOString().slice(0, 10));
         }
-        let upDays = 0;
+
+        let totalUptime = 0;
         let knownDays = 0;
+
         days.forEach(dateStr => {
           const bar = document.createElement('div');
           const entry = history ? history[dateStr] : null;
-          if (!entry) {
-            bar.className = 'uptime-bar nodata';
-            bar.style.height = '8px';
-            bar.title = dateStr + ': NO DATA';
-          } else if (entry.bot) {
-            bar.className = 'uptime-bar up';
-            bar.style.height = (16 + Math.random() * 24) + 'px';
-            bar.title = dateStr + ': ONLINE';
-            upDays++;
-            knownDays++;
+
+          if (!entry || entry.checks === undefined) {
+            // old boolean format or no data
+            if (!entry) {
+              bar.className = 'uptime-bar nodata';
+              bar.style.height = '8px';
+              bar.title = dateStr + ': NO DATA';
+            } else if (entry.bot) {
+              bar.className = 'uptime-bar up';
+              bar.style.height = (16 + Math.random() * 24) + 'px';
+              bar.title = dateStr + ': ONLINE';
+              totalUptime += 1;
+              knownDays++;
+            } else {
+              bar.className = 'uptime-bar down';
+              bar.style.height = '10px';
+              bar.title = dateStr + ': OFFLINE';
+              knownDays++;
+            }
           } else {
-            bar.className = 'uptime-bar down';
-            bar.style.height = '10px';
-            bar.title = dateStr + ': OFFLINE';
+            // new ratio format
+            const ratio = entry.bot;
             knownDays++;
+            totalUptime += ratio;
+
+            if (ratio >= 0.9) {
+              bar.className = 'uptime-bar up';
+              bar.style.height = (16 + Math.random() * 24) + 'px';
+              bar.title = dateStr + ': ONLINE (' + Math.round(ratio * 100) + '%)';
+            } else if (ratio > 0) {
+              bar.className = 'uptime-bar degraded';
+              bar.style.height = '14px';
+              bar.title = dateStr + ': DEGRADED (' + Math.round(ratio * 100) + '%)';
+            } else {
+              bar.className = 'uptime-bar down';
+              bar.style.height = '10px';
+              bar.title = dateStr + ': OFFLINE';
+            }
           }
+
           wrap.appendChild(bar);
         });
+
         document.getElementById('uptime-pct').textContent = knownDays === 0
           ? 'NO DATA YET'
-          : ((upDays / knownDays) * 100).toFixed(2) + '%';
+          : ((totalUptime / knownDays) * 100).toFixed(2) + '%';
       }
 
       function renderLog(events) {
